@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>老公养成计划 · Husband Growth Plan</title>
+<style>
+:root{--bg:#0b091a;--bg2:#0f0c20;--bg3:#150f2e;--bg4:#1a1438;--bg5:#201860;--bdr:#2e2258;--bdr2:#4a3880;--acc:#ddd0ff;--acc2:#b8a8e0;--acc3:#7f60d8;--gold:#f0e288;--gold2:#d4b858;--txt:#eee8fc;--txt2:#b0a0d0;--txt3:#8878b8;--sat:#ffb8e0;--red:#f87171;--fnt:'Georgia','Noto Serif SC',serif;--max:1000px;--r:12px}
+*{box-sizing:border-box;margin:0;padding:0}html,body{min-height:100vh;background:#06040f}
+body{font-family:var(--fnt);color:var(--txt)}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(1px 1px at 7% 12%,#fff3,transparent),radial-gradient(1px 1px at 23% 58%,#c8b8ff22,transparent),
+  radial-gradient(1.5px 1.5px at 51% 9%,#fff2,transparent),radial-gradient(1px 1px at 71% 35%,#e8d87a18,transparent),
+  radial-gradient(1px 1px at 87% 67%,#fff2,transparent),radial-gradient(1.5px 1.5px at 39% 45%,#9b7ec818,transparent),
+  radial-gradient(1px 1px at 93% 22%,#fff1,transparent)}
+
+/* ── SCORE POPUP ── */
+#score-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);z-index:998;opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.175,.885,.32,1.275)}
+#score-popup.show{opacity:1;transform:translate(-50%,-60%) scale(1)}
+#score-popup.hide{opacity:0;transform:translate(-50%,-40%) scale(.8);transition:all .25s ease}
+.sp-inner{border-radius:16px;padding:18px 32px;text-align:center;box-shadow:0 0 40px #00000080}
+.sp-inner.good{background:linear-gradient(135deg,#150f2e,#201860);border:1px solid var(--acc3)}
+.sp-inner.bad{background:linear-gradient(135deg,#1a0808,#2a0f0f);border:1px solid var(--red)}
+.sp-num{font-size:42px;font-style:italic;line-height:1;margin-bottom:4px}
+.sp-num.good{color:var(--gold)}.sp-num.bad{color:var(--red)}
+.sp-label{font-size:12px;letter-spacing:.1em}.sp-label.good{color:var(--acc)}.sp-label.bad{color:var(--red)}
+.sp-detail{font-size:10px;color:var(--txt3);margin-top:4px;font-style:italic}
+
+/* ── ACHIEVEMENT POPUP ── */
+#ach-popup{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:999;opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.175,.885,.32,1.275)}
+#ach-popup.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.ap-inner{background:linear-gradient(135deg,#1a1438,#201860);border:1px solid var(--gold);border-radius:16px;padding:14px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 0 40px #e8d87a40,0 8px 32px #00000080}
+.ap-ico{font-size:34px}.ap-lbl{font-size:9px;letter-spacing:.2em;color:var(--gold2);text-transform:uppercase}
+.ap-name{font-size:15px;color:var(--gold);font-style:italic;margin-top:2px}
+.cfw{position:fixed;inset:0;pointer-events:none;z-index:997;overflow:hidden}
+.cf{position:absolute;width:7px;height:7px;border-radius:2px;animation:cff linear forwards}
+@keyframes cff{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* ── WELCOME ── */
+#welcome{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#06040f;transition:opacity .8s;padding:20px}
+#welcome.out{opacity:0;pointer-events:none}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes reveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+
+/* wedding illustration SVG */
+.w-illus{animation:float 3.5s ease-in-out infinite,reveal .8s ease .1s both;margin-bottom:14px}
+.w-title{font-size:clamp(20px,4vw,36px);font-weight:400;letter-spacing:.18em;background:linear-gradient(135deg,#e8d87a,#c8b8ff,#e8d87a);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite,reveal .8s ease .2s both;margin-bottom:3px}
+.w-sub2{font-size:11px;letter-spacing:.14em;color:var(--txt2);margin-bottom:22px;animation:reveal .8s ease .3s both}
+.w-deco{display:flex;align-items:center;gap:10px;margin-bottom:22px;animation:reveal .8s ease .5s both}
+.w-dl{width:50px;height:.5px;background:linear-gradient(90deg,transparent,var(--bdr2))}.w-dl.r{background:linear-gradient(90deg,var(--bdr2),transparent)}
+.w-di{font-size:13px;color:var(--gold2)}
+.w-box{background:var(--bg3);border:.5px solid var(--bdr);border-radius:var(--r);padding:20px 24px;width:min(320px,90vw);animation:reveal .8s ease .7s both}
+.w-bt{font-size:10px;letter-spacing:.18em;color:var(--txt3);text-transform:uppercase;text-align:center;margin-bottom:3px}
+.w-bs{font-size:10px;color:var(--txt3);text-align:center;margin-bottom:14px;font-style:italic}
+.w-lbl{font-size:10px;letter-spacing:.12em;color:var(--txt3);text-transform:uppercase;margin-bottom:5px;display:flex;justify-content:space-between}
+.w-lbl em{font-style:italic;text-transform:none;letter-spacing:0;font-size:9px}
+.w-inp{width:100%;background:var(--bg4);border:.5px solid var(--bdr);border-radius:8px;padding:10px 13px;font-size:13px;color:var(--acc);font-family:var(--fnt);outline:none;transition:border-color .2s;margin-bottom:12px}
+.w-inp:focus{border-color:var(--bdr2)}.w-inp::placeholder{color:var(--txt3)}
+.w-enter{width:100%;background:var(--bg5);border:.5px solid var(--bdr2);border-radius:8px;padding:12px;font-size:12px;letter-spacing:.1em;color:var(--acc);cursor:pointer;font-family:var(--fnt);transition:background .2s}
+.w-enter:hover{background:var(--acc3);color:#fff}
+.w-err{font-size:11px;color:var(--sat);text-align:center;margin-top:8px;min-height:16px}
+.w-hint{font-size:10px;color:var(--txt3);text-align:center;margin-top:8px;font-style:italic;line-height:1.5}
+
+/* ── APP ── */
+#app{position:relative;z-index:1;min-height:100vh;display:none;flex-direction:column}
+#app.on{display:flex}
+.top-nav{background:var(--bg2);border-bottom:.5px solid var(--bdr);position:sticky;top:0;z-index:50}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:0 20px;display:flex;align-items:stretch}
+.nav-brand{display:flex;flex-direction:column;justify-content:center;padding:8px 0;margin-right:18px;flex-shrink:0}
+.nb-main{font-size:12px;letter-spacing:.1em;color:var(--gold2)}.nb-sub{font-size:9px;color:var(--txt3);margin-top:1px}
+.nav-tabs{display:flex;flex:1;overflow-x:auto;scrollbar-width:none}.nav-tabs::-webkit-scrollbar{display:none}
+.ntab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:12px 13px;font-size:12px;letter-spacing:.04em;color:var(--txt3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:var(--fnt);white-space:nowrap;transition:color .2s,border-color .2s}
+.ntab:hover{color:var(--txt2)}.ntab.on{color:var(--acc);border-bottom-color:var(--acc3)}
+.nt-ico{font-size:14px}.nt-cn{font-size:11px}.nt-en{font-size:8px;color:var(--txt3);font-style:italic}.ntab.on .nt-en{color:var(--acc2)}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;padding-left:12px;flex-shrink:0}
+.nav-av{width:28px;height:28px;border-radius:50%;background:var(--bg5);border:.5px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--acc);cursor:pointer}
+.nav-nm{font-size:11px;color:var(--txt2)}
+.content{flex:1;max-width:var(--max);width:100%;margin:0 auto;padding:22px 20px}
+.sc{display:none}.sc.on{display:block}
+.sec{font-size:10px;letter-spacing:.2em;color:var(--txt3);text-transform:uppercase;margin-bottom:10px}
+.sec em{font-style:italic;text-transform:none;letter-spacing:.06em;margin-left:6px;font-size:10px}
+.divider{border:none;border-top:.5px solid var(--bdr);margin:14px 0}
+.btn{background:var(--bg4);border:.5px solid var(--bdr2);border-radius:8px;padding:11px 20px;font-size:12px;color:var(--acc);letter-spacing:.08em;cursor:pointer;font-family:var(--fnt);transition:background .2s;width:100%;margin-bottom:8px}
+.btn:hover{background:var(--bg5)}.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── HOME ── */
+.hero-card{background:var(--bg3);border:.5px solid var(--bdr2);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.hero-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.hero-frame{width:76px;height:76px;background:var(--bg4);border:.5px solid var(--bdr2);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hero-spr{font-size:44px;filter:drop-shadow(0 0 10px #7f60d860)}
+.h-pill{font-size:9px;letter-spacing:.14em;color:var(--gold2);text-transform:uppercase;border:.5px solid var(--gold2);border-radius:99px;padding:2px 10px;display:inline-block;margin-bottom:5px}
+.h-pill em{font-style:italic;text-transform:none;font-size:8px;letter-spacing:.04em;margin-left:4px}
+.h-name{font-size:18px;color:var(--acc);letter-spacing:.06em;font-style:italic}
+.h-name em{font-size:10px;color:var(--txt2);font-style:normal;letter-spacing:.04em;margin-left:8px}
+.h-st{font-size:11px;color:var(--txt2);margin-top:3px}
+.xp-wrap{margin-bottom:4px}
+.xp-top{display:flex;justify-content:space-between;font-size:11px;color:var(--txt2);margin-bottom:4px}
+.xp-top em{font-style:italic}
+.xpbg{background:var(--bg4);border-radius:99px;height:6px;overflow:hidden}
+.xpfi{height:100%;border-radius:99px;background:var(--acc3);transition:width .6s}
+.xp-sub{font-size:10px;color:var(--txt3);margin-top:3px;font-style:italic}
+.stats-g{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+@media(max-width:500px){.stats-g{grid-template-columns:1fr 1fr}}
+.stat{background:var(--bg4);border:.5px solid var(--bdr);border-radius:10px;padding:10px 12px}
+.stat-cn{font-size:11px;letter-spacing:.08em;color:var(--txt2);text-transform:uppercase;margin-bottom:1px}
+.stat-en{font-size:9px;color:var(--txt3);font-style:italic;margin-bottom:4px}
+.stat-v{font-size:24px;color:var(--acc);line-height:1;font-weight:400}
+.stat-b{background:var(--bg3);border-radius:99px;height:4px;margin-top:6px;overflow:hidden}
+.stat-f{height:100%;border-radius:99px;background:var(--acc3);transition:width .5s}
+.toast{background:var(--bg4);border:.5px solid var(--bdr2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--acc);font-style:italic;text-align:center;margin-bottom:12px;min-height:36px;display:flex;align-items:center;justify-content:center}
+.act-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+@media(max-width:600px){.act-g{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:400px){.act-g{grid-template-columns:1fr 1fr}}
+.act{background:var(--bg4);border:.5px solid var(--bdr);border-radius:10px;padding:11px 5px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;font-family:var(--fnt)}
+.act:hover{background:var(--bg5);border-color:var(--bdr2)}.act:active{transform:scale(.97)}
+.act-ico{font-size:20px;display:block;margin-bottom:3px}
+.act-cn{font-size:11px;color:var(--acc)}.act-en{font-size:9px;color:var(--txt3);font-style:italic;margin-top:1px}
+.act-fx{font-size:9px;color:var(--txt2);margin-top:2px}
+.sat-today{background:var(--bg3);border:.5px solid var(--bdr2);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.sat-today-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sat-today-lbl{font-size:9px;letter-spacing:.16em;color:var(--txt3);text-transform:uppercase}
+.sat-today-lbl em{font-style:italic;text-transform:none;letter-spacing:0;margin-left:4px}
+.sat-today-face{font-size:28px}
+.sat-today-val{font-size:13px;color:var(--sat);font-style:italic;margin-bottom:8px}
+.sat-bars{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sat-bar-lbl{font-size:9px;color:var(--txt3);margin-bottom:3px;display:flex;justify-content:space-between}
+.sat-bar-bg{background:var(--bg4);border-radius:99px;height:4px;overflow:hidden}
+.sat-bar-fill{height:100%;border-radius:99px;background:var(--sat);transition:width .5s}
+
+/* ── SKILL TREE ── */
+.sk-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+@media(max-width:800px){.sk-layout{grid-template-columns:1fr}}
+.sk-preview-panel{position:sticky;top:80px}
+.sk-preview-box{background:var(--bg3);border:.5px solid var(--bdr);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.sk-preview-title{font-size:10px;letter-spacing:.18em;color:var(--txt3);text-transform:uppercase;margin-bottom:12px}
+.sk-preview-title em{font-style:italic;text-transform:none;letter-spacing:0;margin-left:4px}
+.tree-svg-wrap{width:100%;aspect-ratio:1/1.2;background:var(--bg4);border-radius:10px;overflow:hidden;margin-bottom:10px}
+#tree-svg{width:100%;height:100%}
+.sk-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sk-stat-mini{background:var(--bg4);border-radius:8px;padding:8px 6px;text-align:center}
+.sk-stat-mini-v{font-size:18px;color:var(--gold);font-style:italic;line-height:1}
+.sk-stat-mini-l{font-size:8px;color:var(--txt3);margin-top:2px}
+.sk-cat{margin-bottom:20px}
+.sk-cat-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sk-cat-ico{font-size:16px}.sk-cat-cn{font-size:13px;color:var(--acc)}.sk-cat-en{font-size:10px;color:var(--txt3);font-style:italic;margin-left:3px}
+.sk-cat-line{flex:1;height:.5px;background:var(--bdr)}
+.sk-g{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+@media(max-width:800px){.sk-g{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:500px){.sk-g{grid-template-columns:repeat(3,1fr)}}
+.sk{background:var(--bg3);border:.5px solid var(--bdr);border-radius:9px;padding:10px 5px;text-align:center;cursor:pointer;transition:border-color .3s,background .2s,box-shadow .3s;font-family:var(--fnt);position:relative;overflow:hidden}
+.sk:hover{background:var(--bg5);border-color:var(--bdr2)}
+.sk.ow{border-color:var(--acc3);box-shadow:0 0 14px #7f60d840}
+.sk.auto-lit{border-color:var(--gold2);box-shadow:0 0 10px #e8d87a30}
+.sk-glow{position:absolute;inset:0;border-radius:9px;box-shadow:inset 0 0 14px #7f60d840;pointer-events:none;opacity:0;transition:opacity .3s}
+.sk.ow .sk-glow,.sk.auto-lit .sk-glow{opacity:1}
+.sk-ico{font-size:18px;display:block;margin-bottom:3px}.sk-cn{font-size:11px;color:var(--acc)}.sk-en{font-size:9px;color:var(--txt3);font-style:italic;margin-top:1px}
+.sk-owned-tag{font-size:9px;color:var(--acc3);margin-top:3px;letter-spacing:.06em}
+.sk.auto-lit .sk-owned-tag{color:var(--gold2)}
+
+/* ── EVENTS ── */
+.ai-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.1em;color:var(--acc3);border:.5px solid var(--bdr2);border-radius:99px;padding:3px 10px;margin-bottom:12px;text-transform:uppercase}
+.evt-card{background:var(--bg3);border:.5px solid var(--bdr);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.evt-tag{font-size:9px;letter-spacing:.12em;color:var(--acc3);text-transform:uppercase;background:var(--bg4);border-radius:99px;padding:2px 10px;display:inline-block;margin-bottom:9px}
+.evt-t{font-size:15px;color:var(--gold);letter-spacing:.06em;margin-bottom:2px}
+.evt-te{font-size:10px;color:var(--txt3);font-style:italic;margin-bottom:10px}
+.evt-s{font-size:12px;color:var(--txt2);line-height:1.7;margin-bottom:12px;font-style:italic}
+.evt-d{background:var(--bg4);border-left:2px solid var(--acc3);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--acc);line-height:1.7;margin-bottom:13px;font-style:italic}
+.chs{display:flex;flex-direction:column;gap:7px}
+.ch{background:var(--bg4);border:.5px solid var(--bdr);border-radius:8px;padding:11px 14px;font-size:12px;color:var(--txt);cursor:pointer;font-family:var(--fnt);transition:border-color .2s,color .2s;text-align:left}
+.ch:hover:not(:disabled){border-color:var(--bdr2);color:var(--acc)}
+.ch:disabled{cursor:default;opacity:.7}
+.ch.picked-good{border-color:var(--acc3);color:var(--acc);font-style:italic}
+.ch.picked-bad{border-color:var(--red);color:var(--red);font-style:italic}
+.rt-good{background:var(--bg3);border:.5px solid var(--acc3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--acc);font-style:italic;margin-top:10px;text-align:center}
+.rt-bad{background:#1a0a0a;border:.5px solid var(--red);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);font-style:italic;margin-top:10px;text-align:center}
+.ai-loading{text-align:center;padding:24px;color:var(--txt3);font-style:italic;font-size:13px}
+.ai-dot{display:inline-block;animation:blink 1.4s infinite}.ai-dot:nth-child(2){animation-delay:.2s}.ai-dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
+
+/* ── ACHIEVEMENTS ── */
+.ach-intro{background:var(--bg3);border:.5px solid var(--bdr);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.ach-count{font-size:28px;color:var(--gold);font-style:italic;line-height:1}
+.ach-count-lbl{font-size:9px;color:var(--txt3);margin-top:2px}
+.ach-g{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:600px){.ach-g{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:380px){.ach-g{grid-template-columns:1fr 1fr}}
+.bdg{background:var(--bg4);border:.5px solid var(--bdr);border-radius:10px;padding:14px 8px;text-align:center;opacity:.2;transition:opacity .4s,border-color .3s,box-shadow .3s}
+.bdg.on{opacity:1;border-color:var(--acc3);box-shadow:0 0 12px #7f60d828}
+.bdg-ico{font-size:26px;display:block;margin-bottom:6px}
+.bdg-cn{font-size:11px;color:var(--acc);display:block;margin-bottom:2px}
+.bdg-en{font-size:9px;color:var(--txt3);font-style:italic;display:block;margin-bottom:4px}
+.bdg-cond{font-size:9px;color:var(--txt3);font-style:italic;display:block}
+.bdg.on .bdg-cond{color:var(--acc3)}
+
+/* ── ANNIVERSARY ── */
+.ann-top{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:600px){.ann-top{grid-template-columns:1fr}}
+.ann-countdown{background:var(--bg3);border:.5px solid var(--bdr2);border-radius:var(--r);padding:18px;text-align:center}
+.ann-cd-ico{font-size:32px;display:block;margin-bottom:8px}
+.ann-cd-lbl{font-size:9px;letter-spacing:.18em;color:var(--txt3);text-transform:uppercase}
+.ann-cd-lbl em{font-style:italic;text-transform:none;letter-spacing:0;font-size:9px;margin-left:4px}
+.ann-cd-num{font-size:44px;color:var(--gold);font-style:italic;line-height:1;margin:6px 0 2px}
+.ann-cd-unit{font-size:12px;color:var(--txt2);font-style:italic}
+.ann-cd-date{font-size:10px;color:var(--txt3);margin-top:4px}
+.ann-cd-past{color:var(--acc3)}
+.ann-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.ann-item{background:var(--bg3);border:.5px solid var(--bdr);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.ann-item-ico{font-size:22px;flex-shrink:0}
+.ann-item-info{flex:1;min-width:0}
+.ann-item-name{font-size:13px;color:var(--acc)}
+/* date picker row */
+.ann-date-row{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap}
+.ann-sel{background:var(--bg4);border:.5px solid var(--bdr);border-radius:5px;padding:3px 6px;font-size:11px;color:var(--acc2);font-family:var(--fnt);outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+.ann-sel:focus{border-color:var(--bdr2)}
+.ann-item-right{text-align:right;flex-shrink:0}
+.ann-item-days{font-size:20px;color:var(--gold);font-style:italic;line-height:1}
+.ann-item-rel{font-size:9px;color:var(--txt3);margin-top:2px}
+.ann-item-rel.past{color:var(--acc3)}.ann-item-rel.soon{color:var(--sat)}
+.ann-custom{background:var(--bg3);border:.5px solid var(--bdr);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.ann-custom-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ann-custom-title{font-size:11px;letter-spacing:.14em;color:var(--txt3);text-transform:uppercase}
+.ann-custom-title em{font-style:italic;text-transform:none;letter-spacing:0;margin-left:4px}
+.ann-add-btn{background:var(--bg5);border:.5px solid var(--bdr2);border-radius:6px;padding:5px 12px;font-size:11px;color:var(--acc);cursor:pointer;font-family:var(--fnt)}
+.ann-add-btn:hover{background:var(--acc3);color:#fff}
+.ann-form{background:var(--bg4);border-radius:8px;padding:14px;margin-bottom:10px;display:none}
+.ann-form.open{display:block}
+.ann-form-grid{display:grid;grid-template-columns:60px 1fr;gap:8px;margin-bottom:10px}
+.ann-form-row2{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:8px;margin-bottom:10px;align-items:end}
+@media(max-width:480px){.ann-form-row2{grid-template-columns:1fr 1fr}}
+.ann-inp-wrap{display:flex;flex-direction:column;gap:4px}
+.ann-inp-lbl{font-size:9px;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase}
+.ann-inp{background:var(--bg3);border:.5px solid var(--bdr);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--acc);font-family:var(--fnt);outline:none;width:100%;transition:border-color .2s}
+.ann-inp:focus{border-color:var(--bdr2)}
+.ann-sel-lg{background:var(--bg3);border:.5px solid var(--bdr);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--acc);font-family:var(--fnt);outline:none;width:100%;-webkit-appearance:none;appearance:none;cursor:pointer}
+.ann-sel-lg:focus{border-color:var(--bdr2)}
+.ann-save-btn{background:var(--acc3);border:none;border-radius:6px;padding:8px 14px;font-size:11px;color:#fff;cursor:pointer;font-family:var(--fnt);white-space:nowrap;align-self:end}
+.ann-items-list{display:flex;flex-direction:column;gap:6px}
+.ann-custom-item{background:var(--bg3);border:.5px solid var(--bdr);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.ann-custom-item-ico{font-size:18px;flex-shrink:0}
+.ann-custom-item-info{flex:1}
+.ann-custom-item-name{font-size:12px;color:var(--acc)}
+.ann-custom-item-date{font-size:9px;color:var(--txt3);margin-top:1px}
+.ann-custom-item-right{text-align:right;flex-shrink:0}
+.ann-custom-days{font-size:16px;color:var(--gold);font-style:italic}
+.ann-custom-rel{font-size:8px;color:var(--txt3)}
+.ann-custom-rel.past{color:var(--acc3)}.ann-custom-rel.soon{color:var(--sat)}
+.ann-del{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:14px;padding:2px 6px;flex-shrink:0;transition:color .2s}
+.ann-del:hover{color:var(--red)}
+.egg{background:var(--bg3);border:.5px solid var(--bdr2);border-radius:var(--r);padding:20px}
+.egg-t{font-size:14px;color:var(--gold);letter-spacing:.08em;margin-bottom:3px;font-style:italic}
+.egg-te{font-size:9px;color:var(--txt3);font-style:italic;margin-bottom:12px}
+.egg-p{font-size:14px;color:var(--txt2);line-height:2;margin-bottom:16px;font-style:italic}
+.egg-w{display:flex;flex-direction:column;gap:7px}
+.wish{background:var(--bg4);border-radius:8px;padding:10px 13px;border-left:1.5px solid var(--bdr2)}
+.wish-cn{font-size:12px;color:var(--acc);font-style:italic}.wish-en{font-size:9px;color:var(--txt3);font-style:italic;margin-top:2px}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div id="score-popup"><div class="sp-inner good" id="sp-inner"><div class="sp-num good" id="sp-num">+10</div><div class="sp-label good" id="sp-label">加分！</div><div class="sp-detail" id="sp-detail"></div></div></div>
+<div id="ach-popup"><div class="ap-inner"><div class="ap-ico" id="ap-ico">🏆</div><div><div class="ap-lbl">成就解锁 · Achievement Unlocked</div><div class="ap-name" id="ap-name"></div></div></div></div>
+<div id="cfw" class="cfw"></div>
+
+<!-- WELCOME -->
+<div id="welcome">
+  <!-- Cute wedding couple SVG illustration -->
+  <svg class="w-illus" width="160" height="130" viewBox="0 0 160 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- background glow -->
+    <ellipse cx="80" cy="115" rx="55" ry="10" fill="#7f60d8" opacity=".18"/>
+    <!-- moon/arch background -->
+    <circle cx="80" cy="55" r="48" fill="#150f2e" opacity=".8"/>
+    <circle cx="80" cy="55" r="48" fill="none" stroke="#4a3880" stroke-width=".8"/>
+    <!-- stars in arch -->
+    <circle cx="52" cy="32" r="1.2" fill="#e8d87a" opacity=".8"/>
+    <circle cx="108" cy="28" r="1" fill="#c8b8ff" opacity=".7"/>
+    <circle cx="65" cy="22" r=".8" fill="#fff" opacity=".6"/>
+    <circle cx="95" cy="35" r="1" fill="#ff9ed2" opacity=".7"/>
+    <circle cx="42" cy="50" r=".8" fill="#c8b8ff" opacity=".5"/>
+    <circle cx="118" cy="48" r=".8" fill="#e8d87a" opacity=".6"/>
+    <!-- flowers/petals at bottom -->
+    <ellipse cx="30" cy="102" rx="12" ry="6" fill="#f472b6" opacity=".4"/>
+    <ellipse cx="130" cy="102" rx="12" ry="6" fill="#f472b6" opacity=".4"/>
+    <circle cx="30" cy="99" r="5" fill="#fce7f3" opacity=".6"/>
+    <circle cx="130" cy="99" r="5" fill="#fce7f3" opacity=".6"/>
+    <!-- groom body -->
+    <rect x="54" y="80" width="20" height="28" rx="4" fill="#201860"/>
+    <rect x="56" y="80" width="16" height="12" rx="2" fill="#2e2258"/>
+    <!-- groom white shirt -->
+    <rect x="60" y="80" width="8" height="14" rx="1" fill="#d4c8f0" opacity=".9"/>
+    <!-- bow tie -->
+    <polygon points="63,82 65,84 63,86" fill="#e8d87a" opacity=".9"/>
+    <polygon points="67,82 65,84 67,86" fill="#e8d87a" opacity=".9"/>
+    <!-- groom head -->
+    <circle cx="64" cy="68" r="12" fill="#e8c49a"/>
+    <!-- groom hair -->
+    <ellipse cx="64" cy="59" rx="11" ry="7" fill="#3d2800"/>
+    <!-- groom eyes -->
+    <circle cx="60" cy="68" r="1.5" fill="#3d2800"/>
+    <circle cx="68" cy="68" r="1.5" fill="#3d2800"/>
+    <!-- groom smile -->
+    <path d="M60 73 Q64 77 68 73" stroke="#3d2800" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <!-- groom arms -->
+    <rect x="42" y="83" width="12" height="6" rx="3" fill="#201860"/>
+    <rect x="74" y="83" width="12" height="6" rx="3" fill="#201860"/>
+    <!-- bride body -->
+    <rect x="86" y="82" width="22" height="26" rx="5" fill="#fce7f3"/>
+    <!-- bride skirt flare -->
+    <ellipse cx="97" cy="108" rx="18" ry="7" fill="#fce7f3" opacity=".9"/>
+    <!-- bride bodice detail -->
+    <rect x="91" y="82" width="12" height="10" rx="2" fill="#f9a8d4" opacity=".7"/>
+    <!-- bride head -->
+    <circle cx="97" cy="68" r="12" fill="#f5d5b8"/>
+    <!-- bride hair -->
+    <ellipse cx="97" cy="60" rx="12" ry="8" fill="#7c3a1e"/>
+    <ellipse cx="97" cy="56" rx="9" ry="5" fill="#9a4e2a"/>
+    <!-- bride veil -->
+    <path d="M88 58 Q84 70 86 90" stroke="#fce7f3" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/>
+    <!-- bride eyes -->
+    <circle cx="93" cy="68" r="1.5" fill="#3d2800"/>
+    <circle cx="101" cy="68" r="1.5" fill="#3d2800"/>
+    <!-- bride eyelashes -->
+    <line x1="91" y1="66" x2="92" y2="65" stroke="#3d2800" stroke-width=".8"/>
+    <line x1="99" y1="66" x2="100" y2="65" stroke="#3d2800" stroke-width=".8"/>
+    <line x1="103" y1="66" x2="103" y2="65" stroke="#3d2800" stroke-width=".8"/>
+    <!-- bride blush -->
+    <circle cx="89" cy="71" r="3" fill="#f9a8d4" opacity=".4"/>
+    <circle cx="105" cy="71" r="3" fill="#f9a8d4" opacity=".4"/>
+    <!-- bride smile -->
+    <path d="M92 73 Q97 78 102 73" stroke="#3d2800" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <!-- bride bouquet -->
+    <circle cx="110" cy="92" r="8" fill="#f472b6" opacity=".7"/>
+    <circle cx="106" cy="89" r="5" fill="#fb7185" opacity=".8"/>
+    <circle cx="114" cy="89" r="5" fill="#e879f9" opacity=".7"/>
+    <circle cx="110" cy="86" r="4" fill="#f0abfc" opacity=".8"/>
+    <!-- holding hands area -->
+    <ellipse cx="79" cy="90" rx="6" ry="4" fill="#e8c49a" opacity=".6"/>
+    <!-- hearts above -->
+    <text x="72" y="18" font-size="10" fill="#ff9ed2" opacity=".9">♡</text>
+    <text x="84" y="14" font-size="8" fill="#e8d87a" opacity=".8">♡</text>
+    <text x="92" y="19" font-size="6" fill="#c8b8ff" opacity=".7">♡</text>
+  </svg>
+
+  <div class="w-title">老公养成计划</div>
+  <div class="w-sub2">Husband Growth Plan</div>
+  <div class="w-deco"><div class="w-dl"></div><span class="w-di">✦</span><div class="w-dl r"></div></div>
+  <div class="w-box">
+    <div class="w-bt">存档登录 · Save File</div>
+    <div class="w-bs">首次输入自动创建 · Auto-creates on first use</div>
+    <div class="w-lbl"><span>玩家名称</span><em>Player Name</em></div>
+    <input class="w-inp" id="wn" type="text" placeholder="输入你的名字 / Your name" maxlength="12" autocomplete="off">
+    <div class="w-lbl"><span>存档密码</span><em>Password</em></div>
+    <input class="w-inp" id="wp" type="password" placeholder="设置密码 / Set password" maxlength="20" autocomplete="off">
+    <button class="w-enter" onclick="enterGame()">✦ 开始养成 · Start Growing</button>
+    <div class="w-err" id="werr"></div>
+    <div class="w-hint">换设备输入相同名称和密码即可读档<br>Same name &amp; password works on any device</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <nav class="top-nav">
+    <div class="nav-inner">
+      <div class="nav-brand"><div class="nb-main">🌱 老公养成计划</div><div class="nb-sub">Husband Growth Plan</div></div>
+      <div class="nav-tabs">
+        <button class="ntab on" onclick="go('h')"><span class="nt-ico">🏠</span><span class="nt-cn">主页</span><span class="nt-en">Home</span></button>
+        <button class="ntab" onclick="go('e')"><span class="nt-ico">🎲</span><span class="nt-cn">随机事件</span><span class="nt-en">Events</span></button>
+        <button class="ntab" onclick="go('sk')"><span class="nt-ico">🌳</span><span class="nt-cn">技能树</span><span class="nt-en">Skill Tree</span></button>
+        <button class="ntab" onclick="go('ac')"><span class="nt-ico">🏆</span><span class="nt-cn">成就</span><span class="nt-en">Achievements</span></button>
+        <button class="ntab" onclick="go('a')"><span class="nt-ico">💍</span><span class="nt-cn">纪念日</span><span class="nt-en">Dates</span></button>
+      </div>
+      <div class="nav-right">
+        <div class="nav-av" id="nav-av" onclick="logout()" title="登出">?</div>
+        <span class="nav-nm" id="nav-nm"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div id="sh" class="sc on">
+      <div class="hero-card">
+        <div class="hero-row">
+          <div class="hero-frame"><span class="hero-spr" id="spr">🌱</span></div>
+          <div>
+            <div class="h-pill" id="ltag">幼儿园小班 <em>· Kindergarten</em></div>
+            <div class="h-name" id="pnm">初始状态 <em>· Initial State</em></div>
+            <div class="h-st" id="pst">刚刚开始，充满可能性</div>
+          </div>
+        </div>
+        <div class="xp-wrap">
+          <div class="xp-top"><span>阶段进度 <em>· Stage Progress</em></span><span id="xn">12 / 100 XP</span></div>
+          <div class="xpbg"><div class="xpfi" id="xf" style="width:12%"></div></div>
+          <div class="xp-sub" id="xp-next">再获得 88 XP 升入下一级</div>
+        </div>
+      </div>
+      <div class="sec">核心属性 <em>· Core Attributes</em></div>
+      <div class="stats-g">
+        <div class="stat"><div class="stat-cn">浪漫感</div><div class="stat-en">Romance</div><div class="stat-v" id="vr">32</div><div class="stat-b"><div class="stat-f" id="br" style="width:32%"></div></div></div>
+        <div class="stat"><div class="stat-cn">居家力</div><div class="stat-en">Homemaking</div><div class="stat-v" id="vc">18</div><div class="stat-b"><div class="stat-f" id="bc" style="width:18%"></div></div></div>
+        <div class="stat"><div class="stat-cn">厨艺值</div><div class="stat-en">Cooking</div><div class="stat-v" id="vk">25</div><div class="stat-b"><div class="stat-f" id="bk" style="width:25%"></div></div></div>
+        <div class="stat"><div class="stat-cn">沟通力</div><div class="stat-en">Communication</div><div class="stat-v" id="ve">20</div><div class="stat-b"><div class="stat-f" id="be" style="width:20%"></div></div></div>
+        <div class="stat"><div class="stat-cn">独立尊重</div><div class="stat-en">Respect</div><div class="stat-v" id="vd">15</div><div class="stat-b"><div class="stat-f" id="bd" style="width:15%"></div></div></div>
+        <div class="stat"><div class="stat-cn">成长意愿</div><div class="stat-en">Growth</div><div class="stat-v" id="vg2">10</div><div class="stat-b"><div class="stat-f" id="bg2" style="width:10%"></div></div></div>
+      </div>
+      <div class="toast" id="tst">✦ 选择今日养成行动 · Choose your daily action</div>
+      <div class="sec">今日行动 <em>· Daily Actions</em></div>
+      <div class="act-g" id="act-g"></div>
+      <div class="sat-today">
+        <div class="sat-today-hd">
+          <div><div class="sat-today-lbl">老婆今日满意度 <em>· Today's Satisfaction</em></div><div class="sat-today-val" id="sfv">还不错，有在进步</div></div>
+          <div class="sat-today-face" id="sif">😊</div>
+        </div>
+        <div class="sat-bars">
+          <div><div class="sat-bar-lbl"><span>整体满意</span><span id="sat-v1">52</span></div><div class="sat-bar-bg"><div class="sat-bar-fill" id="sat-b1" style="width:52%"></div></div></div>
+          <div><div class="sat-bar-lbl"><span>今日加减</span><span id="sat-v2">0</span></div><div class="sat-bar-bg"><div class="sat-bar-fill" id="sat-b2" style="width:50%;background:var(--acc3)"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTS -->
+    <div id="se" class="sc">
+      <div class="ai-badge">✦ AI 动态生成 · AI Generated</div>
+      <div id="evc"></div>
+      <button class="btn" id="evt-btn" onclick="newEvt()">🎲 随机抽取事件 · Random Event</button>
+    </div>
+
+    <!-- SKILL TREE -->
+    <div id="ssk" class="sc">
+      <div class="sk-layout">
+        <div class="sk-panel" id="sk-panel"></div>
+        <div class="sk-preview-panel">
+          <div class="sk-preview-box">
+            <div class="sk-preview-title">技能树预览 <em>· Live Preview</em></div>
+            <div class="tree-svg-wrap"><svg id="tree-svg" viewBox="0 0 280 340" xmlns="http://www.w3.org/2000/svg"></svg></div>
+            <div class="sk-stats-row">
+              <div class="sk-stat-mini"><div class="sk-stat-mini-v" id="sk-total">0</div><div class="sk-stat-mini-l">已解锁</div></div>
+              <div class="sk-stat-mini"><div class="sk-stat-mini-v" id="sk-pct">0%</div><div class="sk-stat-mini-l">完成度</div></div>
+              <div class="sk-stat-mini"><div class="sk-stat-mini-v" id="sk-left">50</div><div class="sk-stat-mini-l">剩余</div></div>
+            </div>
+          </div>
+          <div style="background:var(--bg3);border:.5px solid var(--bdr);border-radius:var(--r);padding:12px 14px">
+            <div style="font-size:9px;letter-spacing:.14em;color:var(--txt3);text-transform:uppercase;margin-bottom:8px">图例 · Legend</div>
+            <div style="display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--txt2)">
+              <div style="display:flex;align-items:center;gap:7px"><div style="width:12px;height:12px;border-radius:3px;background:var(--bg3);border:.5px solid var(--bdr2)"></div>未点亮 · Locked</div>
+              <div style="display:flex;align-items:center;gap:7px"><div style="width:12px;height:12px;border-radius:3px;background:var(--bg5);border:.5px solid var(--acc3);box-shadow:0 0 5px #7f60d840"></div>手动点亮 · Manual</div>
+              <div style="display:flex;align-items:center;gap:7px"><div style="width:12px;height:12px;border-radius:3px;background:var(--bg4);border:.5px solid var(--gold2);box-shadow:0 0 5px #e8d87a30"></div>行动自动解锁 · Auto</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div id="sac" class="sc">
+      <div class="ach-intro">
+        <div><div class="ach-count" id="ach-count">0 / 24</div><div class="ach-count-lbl">成就已解锁 · Achievements Unlocked</div></div>
+        <div style="font-size:11px;color:var(--txt3);font-style:italic;text-align:right">完成条件自动点亮<br><span style="font-size:10px">Auto-unlocks on condition met</span></div>
+      </div>
+      <div class="ach-g" id="ach-g"></div>
+    </div>
+
+    <!-- ANNIVERSARY -->
+    <div id="sa" class="sc">
+      <div class="ann-top">
+        <div class="ann-countdown">
+          <span class="ann-cd-ico">💑</span>
+          <div class="ann-cd-lbl">在一起 <em>· Together</em></div>
+          <div class="ann-cd-num ann-cd-past" id="ann-tog-days">--</div>
+          <div class="ann-cd-unit">天 · days together</div>
+          <div class="ann-date-row" style="justify-content:center;margin-top:8px">
+            <select class="ann-sel" id="ys-togetherDate" onchange="updateKD('togetherDate')"></select>
+            <select class="ann-sel" id="ms-togetherDate" onchange="updateKD('togetherDate')"></select>
+            <select class="ann-sel" id="ds-togetherDate" onchange="updateKD('togetherDate')"></select>
+          </div>
+        </div>
+        <div class="ann-countdown" id="ann-next-card">
+          <span class="ann-cd-ico" id="ann-next-ico">✨</span>
+          <div class="ann-cd-lbl" id="ann-next-lbl">下一个重要日子 <em>· Next Event</em></div>
+          <div class="ann-cd-num" id="ann-next-days">--</div>
+          <div class="ann-cd-unit">天后 · days away</div>
+          <div class="ann-cd-date" id="ann-next-name" style="margin-top:6px;font-size:12px;color:var(--acc);font-style:italic"></div>
+        </div>
+      </div>
+      <div class="sec">重要纪念日 <em>· Key Dates</em></div>
+      <div class="ann-list" id="ann-list"></div>
+      <div class="ann-custom">
+        <div class="ann-custom-hd">
+          <div class="ann-custom-title">自定义纪念日 <em>· Custom Dates</em></div>
+          <button class="ann-add-btn" onclick="toggleAnnForm()">+ 添加</button>
+        </div>
+        <div class="ann-form" id="ann-form">
+          <div class="ann-form-grid">
+            <div class="ann-inp-wrap"><div class="ann-inp-lbl">图标</div><input class="ann-inp" id="af-ico" type="text" placeholder="🎂" maxlength="2"></div>
+            <div class="ann-inp-wrap"><div class="ann-inp-lbl">纪念日名称</div><input class="ann-inp" id="af-name" type="text" placeholder="例：第一次旅行" maxlength="14"></div>
+          </div>
+          <div style="margin-bottom:8px">
+            <div class="ann-inp-lbl" style="margin-bottom:5px">日期 Date</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <select class="ann-sel-lg" id="af-y" style="flex:1;min-width:80px"></select>
+              <select class="ann-sel-lg" id="af-m" style="flex:1;min-width:70px"></select>
+              <select class="ann-sel-lg" id="af-d" style="flex:1;min-width:70px"></select>
+              <button class="ann-save-btn" onclick="saveCustomDate()">✦ 保存</button>
+            </div>
+          </div>
+        </div>
+        <div class="ann-items-list" id="custom-dates-list"></div>
+      </div>
+      <div class="egg">
+        <div class="egg-t">✦ 写给你的悄悄话</div><div class="egg-te">A little note just for you</div>
+        <div class="egg-p">从高中的走廊到现在，<br>我见证了你所有发光的模样。<br>愿你的婚姻，<br>比星河更绵长，比月光更温柔。</div>
+        <div class="egg-w">
+          <div class="wish"><div class="wish-cn">🌸 愿他每天醒来，第一件事是看你微笑</div><div class="wish-en">May he wake up every day wanting to see you smile first</div></div>
+          <div class="wish"><div class="wish-cn">☀️ 愿你们吵架不过夜，和好用不了五分钟</div><div class="wish-en">May your arguments never last the night</div></div>
+          <div class="wish"><div class="wish-cn">✨ 愿你在婚姻里，永远是最被宠爱的那个</div><div class="wish-en">May you always be the most cherished</div></div>
+          <div class="wish"><div class="wish-cn">💪 愿你们相互成就，各自独立又彼此依靠</div><div class="wish-en">May you grow together while staying beautifully yourselves</div></div>
+          <div class="wish"><div class="wish-cn">💫 愿你们白头偕老，还是彼此最好的朋友</div><div class="wish-en">May you grow old together as best friends</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ DATA ══ */
+let G={xp:12,r:32,c:18,k:25,e:20,d:15,g:10,sat:52,satToday:0,sk:{},ua:[],customDates:[],
+  actionCounts:{r:0,c:0,k:0,e:0,d:0,g:0}}; // track action counts for auto-unlock
+let CU=null;
+const SKY='hgp_v4';
+function lS(){try{return JSON.parse(localStorage.getItem(SKY))||{};}catch(e){return{};}}
+function sS(s){try{localStorage.setItem(SKY,JSON.stringify(s));}catch(e){}}
+function sG(){if(!CU)return;const s=lS();s[CU.key]={...G,savedAt:Date.now()};sS(s);}
+function lG(k){const s=lS();if(s[k])Object.assign(G,s[k]);}
+
+/* ══ LEVELS — slower XP ══ */
+const LV=[
+  {at:0,tag:'幼儿园小班',te:'Kindergarten · Little',sp:'🌱',nm:'初始状态',ne:'Initial State',st:'刚刚开始，充满可能性'},
+  {at:15,tag:'幼儿园中班',te:'Kindergarten · Middle',sp:'🌱',nm:'初见端倪',ne:'First Signs',st:'偶尔能看见一点进步'},
+  {at:30,tag:'幼儿园大班',te:'Kindergarten · Senior',sp:'🌿',nm:'略有成效',ne:'Slight Progress',st:'开始懂事了一点点'},
+  {at:50,tag:'小学一年级',te:'Primary · Grade 1',sp:'🌿',nm:'小学生老公',ne:'Elementary',st:'基础建立中'},
+  {at:70,tag:'小学二年级',te:'Primary · Grade 2',sp:'🌿',nm:'努力学习',ne:'Working Hard',st:'有点进步，继续加油'},
+  {at:92,tag:'小学三年级',te:'Primary · Grade 3',sp:'🌿',nm:'中等水平',ne:'Average',st:'各项能力稳步提升'},
+  {at:116,tag:'小学四年级',te:'Primary · Grade 4',sp:'🌳',nm:'成绩不错',ne:'Good Progress',st:'明显有改变了'},
+  {at:142,tag:'小学五年级',te:'Primary · Grade 5',sp:'🌳',nm:'优等生',ne:'Honor Student',st:'越来越有模有样了'},
+  {at:170,tag:'小学毕业',te:'Primary Graduate',sp:'🌳',nm:'小学毕业',ne:'Primary Grad',st:'完成了基础阶段'},
+  {at:205,tag:'初中一年级',te:'Middle School · Y1',sp:'🌸',nm:'初中生老公',ne:'Middle School',st:'进入新的成长阶段'},
+  {at:250,tag:'初中二年级',te:'Middle School · Y2',sp:'🌸',nm:'叛逆期结束',ne:'Past Rebellion',st:'叛逆期彻底结束了'},
+  {at:300,tag:'初中毕业',te:'Middle School Grad',sp:'🌸',nm:'初中毕业',ne:'MS Graduate',st:'情商和生活能力不错'},
+  {at:360,tag:'高中一年级',te:'High School · Y1',sp:'🎋',nm:'高中生老公',ne:'High School',st:'各方面快速成长'},
+  {at:430,tag:'高中二年级',te:'High School · Y2',sp:'🎋',nm:'稳定发挥',ne:'Consistent',st:'表现稳定，令人满意'},
+  {at:510,tag:'高中毕业',te:'High School Grad',sp:'🎋',nm:'高中毕业',ne:'HS Graduate',st:'通过了关键考验'},
+  {at:600,tag:'大学大一',te:'University · Year 1',sp:'🎓',nm:'大学生老公',ne:'Freshman',st:'正式进入高级养成'},
+  {at:700,tag:'大学大二',te:'University · Year 2',sp:'🎓',nm:'开始成熟了',ne:'Maturing',st:'各项能力都已相当不错'},
+  {at:810,tag:'大学大三',te:'University · Year 3',sp:'🎓',nm:'接近毕业',ne:'Almost There',st:'几乎达到理想状态了'},
+  {at:930,tag:'大学毕业',te:'University Graduate',sp:'🏆',nm:'大学毕业',ne:'Uni Graduate',st:'恭喜！达到了优秀水准'},
+  {at:1070,tag:'研究生一年级',te:'Graduate · Year 1',sp:'⭐',nm:'研究生老公',ne:'Grad Student',st:'超越普通水平了！'},
+  {at:1220,tag:'研究生二年级',te:'Graduate · Year 2',sp:'⭐',nm:'深度养成中',ne:'Deep Growth',st:'各项属性都很出色'},
+  {at:1380,tag:'研究生毕业',te:'Master Graduate',sp:'⭐',nm:'硕士老公',ne:'Master Level',st:'卓越的老公！'},
+  {at:1560,tag:'博士一年级',te:'PhD · Year 1',sp:'🌟',nm:'博士老公',ne:'PhD Husband',st:'已经达到传说级别！'},
+  {at:1760,tag:'博士二年级',te:'PhD · Year 2',sp:'🌟',nm:'接近满级',ne:'Near Perfect',st:'几乎无可挑剔了！'},
+  {at:1980,tag:'博士毕业',te:'Doctor of Marriage',sp:'💎',nm:'博士老公',ne:'Dr. Husband',st:'🎊 传说！满级老公达成！'},
+];
+const MAX_XP=1981;
+
+/* ══ ACTIONS (12) ══ */
+const ACTIONS=[
+  {ico:'💌',cn:'写情书',en:'Love Note',fx:'+浪漫感',gain:{r:7,sat:4,xp:4},cat:'r'},
+  {ico:'🌹',cn:'送小礼物',en:'Gift',fx:'+浪漫感',gain:{r:6,sat:4,xp:4},cat:'r'},
+  {ico:'🕯️',cn:'烛光约会',en:'Candle Date',fx:'+浪漫+满意',gain:{r:9,sat:6,xp:5},cat:'r'},
+  {ico:'🎵',cn:'一起听歌',en:'Music',fx:'+浪漫感',gain:{r:5,sat:3,xp:3},cat:'r'},
+  {ico:'🧹',cn:'主动打扫',en:'Clean House',fx:'+居家力',gain:{c:9,sat:5,xp:5},cat:'c'},
+  {ico:'🛒',cn:'采购日常',en:'Grocery',fx:'+居家力',gain:{c:6,sat:3,xp:4},cat:'c'},
+  {ico:'🔧',cn:'修理东西',en:'Fix It',fx:'+居家力',gain:{c:8,sat:4,xp:5},cat:'c'},
+  {ico:'🍳',cn:'下厨做饭',en:'Cook',fx:'+厨艺+满意',gain:{k:9,sat:5,xp:5},cat:'k'},
+  {ico:'☕',cn:'做早餐',en:'Breakfast',fx:'+厨艺+浪漫',gain:{k:6,r:3,xp:4},cat:'k'},
+  {ico:'💬',cn:'认真倾听',en:'Deep Listen',fx:'+沟通力',gain:{e:9,d:3,xp:5},cat:'e'},
+  {ico:'🙌',cn:'尊重决定',en:'Respect',fx:'+独立尊重',gain:{d:9,e:3,xp:5},cat:'d'},
+  {ico:'📚',cn:'一起学习',en:'Learn',fx:'+成长意愿',gain:{g:9,e:3,xp:6},cat:'g'},
+];
+
+/* ══ SKILL TREE — 5 cats, 10 each = 50 skills, with auto-unlock thresholds ══ */
+// autoUnlock: {cat, threshold} means auto-unlocks when actionCounts[cat] >= threshold
+const SCAT=[
+  {ico:'💕',cn:'浪漫与情感',en:'Romance & Emotion',color:'#f472b6',s:[
+    {id:'r1',i:'🌹',cn:'送花习惯',en:'Flowers',autoUnlock:{cat:'r',n:3}},
+    {id:'r2',i:'💌',cn:'情书达人',en:'Love Notes',autoUnlock:{cat:'r',n:5}},
+    {id:'r3',i:'🕯️',cn:'烛光晚餐',en:'Candlelight',autoUnlock:{cat:'r',n:8}},
+    {id:'r4',i:'💃',cn:'会跳舞',en:'Can Dance',autoUnlock:{cat:'r',n:12}},
+    {id:'r5',i:'🎁',cn:'礼物大师',en:'Gift Master',autoUnlock:{cat:'r',n:15}},
+    {id:'r6',i:'🌙',cn:'夜聊达人',en:'Late Talks',autoUnlock:{cat:'r',n:20}},
+    {id:'r7',i:'📸',cn:'记录生活',en:'Memories'},
+    {id:'r8',i:'💆',cn:'按摩技能',en:'Massage'},
+    {id:'r9',i:'🎵',cn:'会唱情歌',en:'Serenades'},
+    {id:'r10',i:'🌅',cn:'看日出',en:'Sunrise Dates'},
+  ]},
+  {ico:'💬',cn:'沟通与成长',en:'Communication',color:'#60a5fa',s:[
+    {id:'c1',i:'👂',cn:'倾听技能',en:'Active Listen',autoUnlock:{cat:'e',n:3}},
+    {id:'c2',i:'🤝',cn:'善于道歉',en:'Apologizes',autoUnlock:{cat:'e',n:5}},
+    {id:'c3',i:'🧘',cn:'情绪稳定',en:'Stable',autoUnlock:{cat:'e',n:8}},
+    {id:'c4',i:'📖',cn:'爱读书',en:'Book Lover',autoUnlock:{cat:'g',n:5}},
+    {id:'c5',i:'🎯',cn:'目标清晰',en:'Goal Setter',autoUnlock:{cat:'g',n:10}},
+    {id:'c6',i:'💪',cn:'自律达人',en:'Discipline',autoUnlock:{cat:'g',n:15}},
+    {id:'c7',i:'🌍',cn:'开阔眼界',en:'World View'},
+    {id:'c8',i:'🎨',cn:'有艺术感',en:'Artistic'},
+    {id:'c9',i:'🤸',cn:'保持健康',en:'Stays Fit'},
+    {id:'c10',i:'🧩',cn:'解决问题',en:'Problem Solver'},
+  ]},
+  {ico:'🙌',cn:'独立与尊重',en:'Respect & Freedom',color:'#a78bfa',s:[
+    {id:'d1',i:'⚖️',cn:'支持平等',en:'Equality',autoUnlock:{cat:'d',n:3}},
+    {id:'d2',i:'🏠',cn:'家务平分',en:'Equal Chores',autoUnlock:{cat:'d',n:5}},
+    {id:'d3',i:'💼',cn:'支持事业',en:'Career',autoUnlock:{cat:'d',n:8}},
+    {id:'d4',i:'🚫',cn:'不催生育',en:'No Pressure',autoUnlock:{cat:'d',n:12}},
+    {id:'d5',i:'👯',cn:'尊重友谊',en:'Friends OK',autoUnlock:{cat:'d',n:15}},
+    {id:'d6',i:'💰',cn:'财务透明',en:'Finance',autoUnlock:{cat:'d',n:20}},
+    {id:'d7',i:'🧳',cn:'支持旅行',en:'Travel'},
+    {id:'d8',i:'🎤',cn:'不打断',en:'Let You Speak'},
+    {id:'d9',i:'🌱',cn:'接受改变',en:'Change'},
+    {id:'d10',i:'🤲',cn:'共同决策',en:'Decisions'},
+  ]},
+  {ico:'🏠',cn:'家庭与生活',en:'Home & Life',color:'#34d399',s:[
+    {id:'h1',i:'🧹',cn:'打扫达人',en:'Clean Freak',autoUnlock:{cat:'c',n:3}},
+    {id:'h2',i:'🧺',cn:'洗衣高手',en:'Laundry Pro',autoUnlock:{cat:'c',n:5}},
+    {id:'h3',i:'🛒',cn:'采购能手',en:'Shopper',autoUnlock:{cat:'c',n:8}},
+    {id:'h4',i:'🔧',cn:'修理工',en:'Handyman',autoUnlock:{cat:'c',n:12}},
+    {id:'h5',i:'🌿',cn:'养花种菜',en:'Gardener',autoUnlock:{cat:'c',n:15}},
+    {id:'h6',i:'🐾',cn:'爱护宠物',en:'Pet Lover',autoUnlock:{cat:'c',n:20}},
+    {id:'h7',i:'🗂️',cn:'整理控',en:'Organizer'},
+    {id:'h8',i:'💡',cn:'节能达人',en:'Eco'},
+    {id:'h9',i:'🛋️',cn:'居家布置',en:'Interior'},
+    {id:'h10',i:'📦',cn:'搬家能手',en:'Mover'},
+  ]},
+  {ico:'🍳',cn:'厨艺与美食',en:'Cooking & Food',color:'#f97316',s:[
+    {id:'k1',i:'🍜',cn:'煮面达人',en:'Noodle Master',autoUnlock:{cat:'k',n:3}},
+    {id:'k2',i:'🥚',cn:'早餐专家',en:'Breakfast Pro',autoUnlock:{cat:'k',n:5}},
+    {id:'k3',i:'🥗',cn:'沙拉大厨',en:'Salad Chef',autoUnlock:{cat:'k',n:8}},
+    {id:'k4',i:'🍱',cn:'便当高手',en:'Bento Box',autoUnlock:{cat:'k',n:12}},
+    {id:'k5',i:'🍰',cn:'烘焙初级',en:'Baker',autoUnlock:{cat:'k',n:15}},
+    {id:'k6',i:'🍕',cn:'披萨大师',en:'Pizza',autoUnlock:{cat:'k',n:20}},
+    {id:'k7',i:'🥘',cn:'炖菜专家',en:'Stew'},
+    {id:'k8',i:'🍣',cn:'会做日料',en:'Japanese'},
+    {id:'k9',i:'🍷',cn:'懂得选酒',en:'Wine'},
+    {id:'k10',i:'☕',cn:'咖啡师',en:'Barista'},
+  ]},
+];
+const ALL_SKILLS=SCAT.flatMap(c=>c.s);
+
+/* ══ ACHIEVEMENTS (24, incl. legendary ones) ══ */
+const ACH=[
+  {id:'a1',i:'💖',cn:'初吻浪漫',en:'First Romance',cond:'浪漫感 ≥ 40',f:()=>G.r>=40},
+  {id:'a2',i:'💝',cn:'浪漫达人',en:'Romance Master',cond:'浪漫感 ≥ 70',f:()=>G.r>=70},
+  {id:'a3',i:'🏠',cn:'居家初级',en:'Home Starter',cond:'居家力 ≥ 40',f:()=>G.c>=40},
+  {id:'a4',i:'🏡',cn:'居家高手',en:'Home Expert',cond:'居家力 ≥ 75',f:()=>G.c>=75},
+  {id:'a5',i:'🍳',cn:'厨房新手',en:'Kitchen Novice',cond:'厨艺值 ≥ 40',f:()=>G.k>=40},
+  {id:'a6',i:'👨‍🍳',cn:'大厨认证',en:'Chef Certified',cond:'厨艺值 ≥ 75',f:()=>G.k>=75},
+  {id:'a7',i:'💬',cn:'话题王',en:'Conversationalist',cond:'沟通力 ≥ 40',f:()=>G.e>=40},
+  {id:'a8',i:'🧠',cn:'沟通大师',en:'Talk Master',cond:'沟通力 ≥ 75',f:()=>G.e>=75},
+  {id:'a9',i:'🙌',cn:'懂得尊重',en:'Shows Respect',cond:'独立尊重 ≥ 40',f:()=>G.d>=40},
+  {id:'a10',i:'👑',cn:'尊重满分',en:'Respect 100',cond:'独立尊重 ≥ 75',f:()=>G.d>=75},
+  {id:'a11',i:'📚',cn:'求知欲强',en:'Curious Mind',cond:'成长意愿 ≥ 40',f:()=>G.g>=40},
+  {id:'a12',i:'🌟',cn:'共同成长',en:'Growing Together',cond:'成长意愿 ≥ 75',f:()=>G.g>=75},
+  {id:'a13',i:'😍',cn:'老婆超满意',en:'Wife Thrilled',cond:'满意度 ≥ 80',f:()=>G.sat>=80},
+  {id:'a14',i:'🌈',cn:'全能老公',en:'All-Rounder',cond:'全属性 ≥ 50',f:()=>G.r>=50&&G.c>=50&&G.k>=50&&G.e>=50&&G.d>=50&&G.g>=50},
+  {id:'a15',i:'🎓',cn:'小学毕业',en:'Primary Grad',cond:'XP ≥ 170',f:()=>G.xp>=170},
+  {id:'a16',i:'🎓',cn:'初中毕业',en:'Middle Grad',cond:'XP ≥ 300',f:()=>G.xp>=300},
+  {id:'a17',i:'🎓',cn:'高中毕业',en:'HS Grad',cond:'XP ≥ 510',f:()=>G.xp>=510},
+  {id:'a18',i:'🏆',cn:'大学毕业',en:'Uni Grad',cond:'XP ≥ 930',f:()=>G.xp>=930},
+  {id:'a19',i:'⭐',cn:'研究生毕业',en:'Master Grad',cond:'XP ≥ 1380',f:()=>G.xp>=1380},
+  {id:'a20',i:'💎',cn:'博士老公',en:'PhD Husband',cond:'XP ≥ 1980',f:()=>G.xp>=1980},
+  {id:'a21',i:'🔥',cn:'技能狂人',en:'Skill Maniac',cond:'解锁20个技能',f:()=>Object.keys(G.sk).filter(k=>G.sk[k]).length>=20},
+  {id:'a22',i:'🌺',cn:'现代伴侣',en:'Modern Partner',cond:'尊重+沟通各≥60',f:()=>G.d>=60&&G.e>=60},
+  // legendary ones moved from skill tree:
+  {id:'a23',i:'👑',cn:'完美伴侣',en:'Perfect Partner',cond:'全属性 ≥ 80',f:()=>G.r>=80&&G.c>=80&&G.k>=80&&G.e>=80&&G.d>=80&&G.g>=80},
+  {id:'a24',i:'💍',cn:'婚前满分',en:'Pre-Wedding',cond:'XP ≥ 400',f:()=>G.xp>=400},
+];
+
+/* ══ EVENTS ══ */
+const EV=[
+  {tag:'职场平等 · Career',t:'她升职了',te:'She Got Promoted',s:'你刚拿到梦寐以求的晋升机会，薪资比他高了一大截。回到家你告诉他这个消息……',d:'"真的吗？那……那你以后比我赚得多了。" 他沉默了一会儿。',
+   c:[{t:'他真诚地说"我为你骄傲"，给了你大大的拥抱',good:true,g:{r:10,sat:7,d:7,xp:10}},
+      {t:'他说"那以后你请客"，若无其事轻松化解',good:true,g:{r:6,sat:4,xp:7}},
+      {t:'他沉默了好久，明显心里有点别扭',good:false,g:{r:-5,sat:-6,xp:2}}]},
+  {tag:'个人空间 · Space',t:'我需要独处时间',te:'She Needs Alone Time',s:'你今天很累，需要独处充电。你告诉他今晚想一个人待着，不是因为他做错什么……',d:'"哦……是我哪里做得不好吗？" 他有点不安地问。',
+   c:[{t:'他说"没问题，我出去打球"，完全理解',good:true,g:{d:10,sat:7,xp:9}},
+      {t:'他给你倒杯茶说"叫我就好"，默默守护',good:true,g:{r:7,sat:5,xp:7}},
+      {t:'他不停追问"你到底怎么了"，完全不理解独处需求',good:false,g:{e:-6,sat:-8,xp:2}}]},
+  {tag:'家务分工 · Chores',t:'家务的问题',te:'The Chore Talk',s:'你注意到最近家务分配不均，你做了80%，他做了20%……',d:'"我……我以为你喜欢做这些。" 他有点尴尬地说。',
+   c:[{t:'他认真道歉并立刻制定了轮流值班表',good:true,g:{c:11,sat:8,d:7,xp:11}},
+      {t:'他承认没想到，开始主动学习做家务',good:true,g:{c:8,g:5,xp:8}},
+      {t:'他说"那我给你钱"，用金钱回避责任',good:false,g:{c:-4,d:-6,sat:-5,xp:2}}]},
+  {tag:'财务自主 · Finance',t:'我要有独立账户',te:'Financial Independence',s:'婚期将近，你提出要保留属于自己的独立账户……',d:'"为什么？你不信任我吗？" 他皱起眉头。',
+   c:[{t:'他思考后说"有道理，每个人都需要安全感"',good:true,g:{d:11,e:7,sat:7,xp:11}},
+      {t:'他提出一起研究最适合你们的财务模式',good:true,g:{e:8,g:5,xp:8}},
+      {t:'他说"结婚了就是一家人，不需要独立账户"',good:false,g:{d:-8,sat:-7,xp:2}}]},
+  {tag:'社交自由 · Social',t:'闺蜜聚会',te:'Girls Night Out',s:'你要和高中闺蜜们聚会，可能玩到很晚。他的表情有点微妙……',d:'"这么晚啊……会有男生吗？"',
+   c:[{t:'他说"玩开心，平安到家告诉我就好"，完全信任',good:true,g:{d:12,r:7,sat:8,xp:10}},
+      {t:'他帮你叫好代驾，叮嘱你开心',good:true,g:{r:8,sat:5,xp:7}},
+      {t:'他说"能不能早点回来"，无形中给压力',good:false,g:{d:-7,sat:-6,xp:2}}]},
+  {tag:'情感支持 · Emotion',t:'我只是需要被听见',te:'Just Listen',s:'你今天工作受了委屈，回家只想倾诉，不需要解决方案……',d:'"那你应该这样做……" 他没说完就被你打断了。',
+   c:[{t:'他立刻道歉说"对不起，你继续"，认真倾听',good:true,g:{e:11,sat:7,xp:10}},
+      {t:'他递给你热茶，静静地陪着你',good:true,g:{r:8,sat:6,xp:8}},
+      {t:'他继续给建议，完全没有意识到问题所在',good:false,g:{e:-5,sat:-7,xp:2}}]},
+  {tag:'梦想支持 · Dreams',t:'我想去留学',te:'Study Abroad',s:'你告诉他你一直有个留学梦，可能需要分隔一两年……',d:'"那……我们怎么办？婚期不是快到了吗？"',
+   c:[{t:'他说"你的梦想重要，我们来想想怎么两全"',good:true,g:{d:11,e:7,sat:8,xp:11}},
+      {t:'他说"要不婚后一起去？我也找找工作"',good:true,g:{r:8,g:6,xp:9}},
+      {t:'他说"结婚了哪还能随便跑"，直接否定',good:false,g:{d:-9,sat:-8,xp:2}}]},
+  {tag:'日常沟通 · Daily',t:'他又忘了',te:'He Forgot Again',s:'你们说好今天他来安排晚饭，但他忘了，还若无其事地刷手机……',d:'"啊？有吗？我……我不记得了。" 他有点心虚。',
+   c:[{t:'你冷静表达感受，没有指责，他认真道歉',good:true,g:{e:9,sat:6,xp:9}},
+      {t:'你们一起订了外卖，你提议建共享日历',good:true,g:{e:7,g:7,xp:8}},
+      {t:'你直接爆发，气氛僵了整个晚上',good:false,g:{e:-4,sat:-8,r:-3,xp:1}}]},
+];
+
+const TT={r:['他今天主动说了"辛苦了"','他关掉游戏问你今天怎么样','他记得你最喜欢的口味了'],c:['他主动拿起了拖把！进步','碗比昨天洗得干净','他把袜子放洗衣机了'],k:['荷包蛋没糊，很有进步','厨房没有起火，成功','面条居然熟了，奇迹'],e:['他今天认真听你说完了','他没有急着给建议，只是听','他主动道歉了，进步很大'],d:['他问了你对这件事的看法','他支持你的决定，没有多问','他记得今天是你的重要日子'],g:['他今天分享了一本好书','他说想学一门新技能','他主动讨论了你们未来规划']};
+
+/* ══ AUTH ══ */
+function enterGame(){
+  const name=document.getElementById('wn').value.trim();
+  const pass=document.getElementById('wp').value.trim();
+  const err=document.getElementById('werr');
+  if(!name){err.textContent='请输入名称 · Please enter a name';return;}
+  if(!pass){err.textContent='请设置密码 · Please set a password';return;}
+  err.textContent='';
+  const key=btoa(unescape(encodeURIComponent(name.toLowerCase()+':'+pass)));
+  const saves=lS();
+  const prefix=btoa(unescape(encodeURIComponent(name.toLowerCase()))).slice(0,8);
+  if(Object.keys(saves).some(k=>k.startsWith(prefix))&&!saves[key]){err.textContent='密码不正确 · Wrong password';return;}
+  CU={name,key};lG(key);
+  if(!G.customDates)G.customDates=[];
+  if(!G.actionCounts)G.actionCounts={r:0,c:0,k:0,e:0,d:0,g:0};
+  document.getElementById('nav-nm').textContent=name;
+  document.getElementById('nav-av').textContent=name[0].toUpperCase();
+  document.getElementById('welcome').classList.add('out');
+  setTimeout(()=>{
+    document.getElementById('welcome').style.display='none';
+    document.getElementById('app').classList.add('on');
+    renderActions();initAnnSelects();rAnn();rf();
+  },800);
+}
+function logout(){sG();CU=null;document.getElementById('app').classList.remove('on');const w=document.getElementById('welcome');w.style.display='flex';w.classList.remove('out');document.getElementById('wn').value='';document.getElementById('wp').value='';document.getElementById('werr').textContent='';}
+
+/* ══ NAV ══ */
+function go(id){
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('s'+id).classList.add('on');
+  const m={h:0,e:1,sk:2,ac:3,a:4};
+  document.querySelectorAll('.ntab')[m[id]].classList.add('on');
+  if(id==='sk'){rSk();renderTree();}
+  if(id==='e'&&!document.getElementById('evc').innerHTML)newEvt();
+  if(id==='ac')rAchTab();
+  if(id==='a')rAnn();
+}
+
+/* ══ ACTIONS RENDER ══ */
+function renderActions(){
+  document.getElementById('act-g').innerHTML=ACTIONS.map((a,i)=>
+    `<div class="act" onclick="act(${i})"><span class="act-ico">${a.ico}</span><div class="act-cn">${a.cn}</div><div class="act-en">${a.en}</div><div class="act-fx">${a.fx}</div></div>`
+  ).join('');
+}
+
+/* ══ REFRESH ══ */
+function rf(){
+  const lv=LV.filter(l=>G.xp>=l.at).pop();
+  const nlv=LV.find(l=>l.at>G.xp);
+  document.getElementById('ltag').innerHTML=lv.tag+' <em>· '+lv.te+'</em>';
+  document.getElementById('spr').textContent=lv.sp;
+  document.getElementById('pnm').innerHTML=lv.nm+' <em>· '+lv.ne+'</em>';
+  document.getElementById('pst').textContent=lv.st;
+  const pct=nlv?((G.xp-lv.at)/(nlv.at-lv.at)*100):100;
+  document.getElementById('xf').style.width=Math.min(pct,100)+'%';
+  document.getElementById('xn').textContent=G.xp+(nlv?' / '+nlv.at:' / MAX')+' XP';
+  document.getElementById('xp-next').textContent=nlv?'再获得 '+(nlv.at-G.xp)+' XP 升入 '+nlv.tag:'🎊 已达最高等级！';
+  const s=Math.round(G.sat);
+  document.getElementById('sif').textContent=s>=80?'😍':s>=60?'🥰':s>=40?'😊':s>=20?'😐':'😤';
+  document.getElementById('sfv').textContent=s>=80?'非常满意，今天超棒！':s>=60?'满意，状态不错':s>=40?'还不错，有在进步':s>=20?'一般，需要努力':'有点失望，快行动！';
+  document.getElementById('sat-v1').textContent=s;document.getElementById('sat-b1').style.width=s+'%';
+  const td=G.satToday||0;
+  document.getElementById('sat-v2').textContent=(td>=0?'+':'')+td;
+  document.getElementById('sat-b2').style.width=Math.max(0,Math.min(100,50+td*2))+'%';
+  document.getElementById('sat-b2').style.background=td<0?'var(--red)':'var(--acc3)';
+  [['r','br'],['c','bc'],['k','bk'],['e','be'],['d','bd'],['g','bg2']].forEach(([k,b])=>{
+    const id=k==='g'?'vg2':'v'+k;
+    const v=Math.min(Math.round(G[k]),100);
+    document.getElementById(id).textContent=v;
+    document.getElementById(b).style.width=v+'%';
+  });
+  checkAutoUnlock();
+  rAchCheck();sG();
+}
+
+/* ══ ACT ══ */
+function act(i){
+  const a=ACTIONS[i];
+  let satDelta=0;
+  Object.entries(a.gain).forEach(([k,v])=>{
+    if(k==='xp')G.xp=Math.min(MAX_XP,G.xp+v);
+    else if(k==='sat'){const nv=Math.max(0,Math.min(100,G.sat+v));satDelta+=nv-G.sat;G.sat=nv;}
+    else G[k]=Math.min(100,G[k]+v);
+  });
+  G.satToday=(G.satToday||0)+satDelta;
+  // track action counts for auto-unlock
+  if(!G.actionCounts)G.actionCounts={r:0,c:0,k:0,e:0,d:0,g:0};
+  G.actionCounts[a.cat]=(G.actionCounts[a.cat]||0)+1;
+  const pool=TT[a.cat]||TT.r;
+  document.getElementById('tst').textContent=pool[Math.floor(Math.random()*pool.length)];
+  rf();
+}
+
+/* ══ AUTO UNLOCK skills based on action counts ══ */
+function checkAutoUnlock(){
+  if(!G.actionCounts)return;
+  let anyNew=false;
+  SCAT.forEach(cat=>cat.s.forEach(s=>{
+    if(s.autoUnlock&&!G.sk[s.id]){
+      const cnt=G.actionCounts[s.autoUnlock.cat]||0;
+      if(cnt>=s.autoUnlock.n){G.sk[s.id]='auto';anyNew=true;}
+    }
+  }));
+  if(anyNew&&document.getElementById('ssk').classList.contains('on')){rSk();renderTree();}
+}
+
+/* ══ SCORE POPUP ══ */
+let _spTimer=null;
+function showScorePopup(total,good,details){
+  const pop=document.getElementById('score-popup');
+  const inner=document.getElementById('sp-inner');
+  inner.className='sp-inner '+(good?'good':'bad');
+  document.getElementById('sp-num').className='sp-num '+(good?'good':'bad');
+  document.getElementById('sp-num').textContent=(good?'+':'')+total;
+  document.getElementById('sp-label').className='sp-label '+(good?'good':'bad');
+  document.getElementById('sp-label').textContent=good?'加分！Good choice！':'扣分！Oops...';
+  document.getElementById('sp-detail').textContent=details;
+  pop.classList.remove('hide');pop.classList.add('show');
+  if(_spTimer)clearTimeout(_spTimer);
+  _spTimer=setTimeout(()=>{pop.classList.remove('show');pop.classList.add('hide');},2200);
+}
+
+/* ══ EVENTS ══ */
+async function newEvt(){
+  const btn=document.getElementById('evt-btn');
+  btn.disabled=true;btn.textContent='🎲 生成中 · Loading...';
+  document.getElementById('evc').innerHTML='<div class="ai-loading">AI 正在创作今日剧情<span class="ai-dot">·</span><span class="ai-dot">·</span><span class="ai-dot">·</span></div>';
+  const stats=`浪漫感${Math.round(G.r)},居家力${Math.round(G.c)},厨艺${Math.round(G.k)},沟通力${Math.round(G.e)},独立尊重${Math.round(G.d)},成长意愿${Math.round(G.g)}`;
+  const prompt=`婚姻养成游戏。属性：${stats}。生成一个符合现代独立女性价值观的婚姻日常事件，必须有一个明显错误的扣分选项。JSON（只返回JSON）：{"tag":"话题标签中英","title":"中文标题","titleEn":"English","scene":"场景30字","dialog":"老公的话","choices":[{"text":"选项A","good":true},{"text":"选项B","good":true},{"text":"选项C错误","good":false}]}`;
+  try{
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],systemPrompt:'婚姻养成游戏AI，生成符合现代独立女性价值观的中文剧情，只返回JSON。'})});
+    const data=await r.json();
+    const ev=JSON.parse((data.text||'').replace(/```json|```/g,'').trim());
+    const gains=[[{r:9,sat:6,d:6,xp:10}],[{e:9,k:4,xp:9}],[{r:-5,sat:-7,d:-4,xp:2}]];
+    renderEvt({tag:ev.tag,t:ev.title,te:ev.titleEn,s:ev.scene,d:ev.dialog,c:ev.choices.map((c,i)=>({t:typeof c==='string'?c:c.text,good:typeof c==='object'?c.good:i<2,g:gains[i%3][0]}))});
+  }catch(e){
+    renderEvt(EV[Math.floor(Math.random()*EV.length)]);
+  }finally{btn.disabled=false;btn.textContent='🎲 再来一个 · Next Event';}
+}
+
+function renderEvt(ev){
+  window._curEv=ev;
+  document.getElementById('evc').innerHTML=
+    '<div class="evt-card"><div class="evt-tag">'+ev.tag+'</div><div class="evt-t">'+ev.t+'</div><div class="evt-te">'+ev.te+'</div><div class="evt-s">'+ev.s+'</div><div class="evt-d">'+ev.d+'</div>'+
+    '<div class="chs">'+ev.c.map((c,i)=>'<button class="ch" id="ch-'+i+'" onclick="pickC('+i+')">'+c.t+'</button>').join('')+'</div></div><div id="crs"></div>';
+}
+
+function pickC(i){
+  const ev=window._curEv;if(!ev)return;
+  const c=ev.c[i];const good=c.good;
+  document.querySelectorAll('.ch').forEach(b=>{b.disabled=true;});
+  document.getElementById('ch-'+i).classList.add(good?'picked-good':'picked-bad');
+  // apply gains
+  let satDelta=0,xpDelta=0;
+  const details=[];
+  Object.entries(c.g).forEach(([k,v])=>{
+    if(k==='xp'){G.xp=Math.max(0,Math.min(MAX_XP,G.xp+v));xpDelta=v;}
+    else if(k==='sat'){const nv=Math.max(0,Math.min(100,G.sat+v));satDelta+=nv-G.sat;G.sat=nv;}
+    else{G[k]=Math.max(0,Math.min(100,G[k]+v));if(v!==0)details.push((v>0?'+':'')+v+' '+k);}
+  });
+  G.satToday=(G.satToday||0)+satDelta;
+  const totalScore=Object.values(c.g).reduce((s,v)=>s+(v>0?v:0),0);
+  showScorePopup(good?totalScore:Math.abs(satDelta),good,details.slice(0,3).join(' · '));
+  if(good)spawnCf();
+  rf();
+  setTimeout(async()=>{
+    const rtClass=good?'rt-good':'rt-bad';
+    document.getElementById('crs').innerHTML=`<div class="${rtClass}">${good?'✦ 处理中…':'✗ 处理中…'}</div>`;
+    try{
+      const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:'玩家选了'+(good?'正面':'错误')+'选项，给出20字以内'+(good?'温柔幽默':'略带惋惜')+'中英双语反馈，用'+(good?'✦':'✗')+'符号'}],systemPrompt:'婚姻游戏AI，简短双语反馈。'})});
+      const data=await r.json();
+      document.getElementById('crs').innerHTML=`<div class="${rtClass}">`+(data.text||(good?'养成成功 ✦ Great!':'有点遗憾 ✗'))+'</div>';
+    }catch(e){
+      const fb=good?['他被你打动了 ✦ Moved · 浪漫+9']:['这次没发挥好 ✗ Try again'];
+      document.getElementById('crs').innerHTML=`<div class="${rtClass}">`+fb[0]+'</div>';
+    }
+  },400);
+}
+
+/* ══ SKILL TREE ══ */
+function rSk(){
+  document.getElementById('sk-panel').innerHTML=SCAT.map(cat=>
+    `<div class="sk-cat"><div class="sk-cat-hd"><span class="sk-cat-ico">${cat.ico}</span><span class="sk-cat-cn">${cat.cn}</span><span class="sk-cat-en">${cat.en}</span><div class="sk-cat-line"></div></div><div class="sk-g">${
+      cat.s.map(s=>{
+        const o=G.sk[s.id];
+        const isAuto=o==='auto';
+        const hint=s.autoUnlock?`行动 ${s.autoUnlock.n} 次自动解锁`:'手动点亮';
+        return`<div class="sk${o?' ow':''}${isAuto?' auto-lit':''}" onclick="toggleSk('${s.id}')" title="${hint}">
+          <div class="sk-glow"></div>
+          <span class="sk-ico">${s.i}</span>
+          <div class="sk-cn">${s.cn}</div>
+          <div class="sk-en">${s.en}</div>
+          <div class="sk-owned-tag">${isAuto?'⚡ 自动':''}${o&&!isAuto?'✦ 已点亮':''}</div>
+        </div>`;
+      }).join('')
+    }</div></div>`
+  ).join('');
+}
+
+function toggleSk(id){
+  // auto-lit ones can still be manually toggled
+  G.sk[id]=G.sk[id]?null:'manual';
+  if(!G.sk[id])delete G.sk[id];
+  const n=Object.keys(G.sk).filter(k=>G.sk[k]).length;
+  if(n>=20&&!G.ua.includes('a21')){G.ua.push('a21');showAP(ACH.find(a=>a.id==='a21'));}
+  rSk();renderTree();rAchCheck();sG();
+}
+
+function renderTree(){
+  const svg=document.getElementById('tree-svg');
+  const unlocked=Object.keys(G.sk).filter(k=>G.sk[k]).length;
+  const total=ALL_SKILLS.length;
+  document.getElementById('sk-total').textContent=unlocked;
+  document.getElementById('sk-pct').textContent=Math.round(unlocked/total*100)+'%';
+  document.getElementById('sk-left').textContent=total-unlocked;
+  const W=280,H=340;
+  const tx=W/2,tbY=H-10,ttY=H*.53;
+  const branches=[
+    {x:tx,y:ttY,a:-90,l:58,ci:0},
+    {x:tx,y:ttY+18,a:-128,l:52,ci:1},
+    {x:tx,y:ttY+18,a:-52,l:52,ci:2},
+    {x:tx,y:ttY+40,a:-155,l:46,ci:3},
+    {x:tx,y:ttY+40,a:-25,l:46,ci:4},
+  ];
+  let h=`<defs>
+    <filter id="g1"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="g2"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>`;
+  const p=unlocked/total;
+  h+=`<line x1="${tx}" y1="${tbY}" x2="${tx}" y2="${ttY+55}" stroke="#2e2258" stroke-width="16" stroke-linecap="round"/>`;
+  if(p>0){const py=tbY-(tbY-(ttY+55))*p;h+=`<line x1="${tx}" y1="${tbY}" x2="${tx}" y2="${py}" stroke="#7f60d8" stroke-width="8" stroke-linecap="round" opacity=".8" filter="url(#g1)"/>`;}
+  branches.forEach((b,bi)=>{
+    const cat=SCAT[bi];const cs=cat.s;
+    const cu=cs.filter(s=>G.sk[s.id]).length/cs.length;
+    const ra=b.a*Math.PI/180;
+    const bx2=b.x+Math.cos(ra)*b.l,by2=b.y+Math.sin(ra)*b.l;
+    h+=`<line x1="${b.x}" y1="${b.y}" x2="${bx2}" y2="${by2}" stroke="#2e2258" stroke-width="5" stroke-linecap="round"/>`;
+    if(cu>0){const px=b.x+Math.cos(ra)*b.l*cu,py=b.y+Math.sin(ra)*b.l*cu;h+=`<line x1="${b.x}" y1="${b.y}" x2="${px}" y2="${py}" stroke="${cat.color}" stroke-width="2.5" stroke-linecap="round" filter="url(#g1)" opacity=".9"/>`;}
+    const lr=cu>0.7?20:cu>0.3?14:9;const lo=cu>0?0.85:0.18;
+    h+=`<circle cx="${bx2}" cy="${by2}" r="${lr+7}" fill="${cat.color}" opacity="${lo*.15}"/>`;
+    h+=`<circle cx="${bx2}" cy="${by2}" r="${lr}" fill="${cat.color}" opacity="${lo*.45}" ${cu>0.5?'filter="url(#g2)"':''}/>`;
+    h+=`<text x="${bx2}" y="${by2+1}" text-anchor="middle" dominant-baseline="central" font-size="13">${cat.ico}</text>`;
+    cs.forEach((s,si)=>{
+      const sa=ra+(si-cs.length/2+.5)*.24;const sd=b.l*.55+si*2.5;
+      const sx=b.x+Math.cos(sa)*sd,sy=b.y+Math.sin(sa)*sd;
+      const on=G.sk[s.id];const isAuto=on==='auto';
+      h+=`<circle cx="${sx}" cy="${sy}" r="${on?4:2}" fill="${on?(isAuto?'#e8d87a':cat.color):'#2e2258'}" opacity="${on?1:.5}" ${on?'filter="url(#g1)"':''}/>`;
+    });
+  });
+  if(unlocked>0)h+=`<ellipse cx="${tx}" cy="${tbY-4}" rx="18" ry="7" fill="#7f60d8" opacity=".35" filter="url(#g1)"/>`;
+  svg.innerHTML=h;
+}
+
+/* ══ ACHIEVEMENTS ══ */
+function rAchCheck(){
+  if(!G.ua)G.ua=[];
+  ACH.forEach(a=>{
+    const el=document.getElementById('ab-'+a.id);
+    if(a.f()&&!G.ua.includes(a.id)){G.ua.push(a.id);showAP(a);}
+    if(el&&a.f()&&!el.classList.contains('on'))el.classList.add('on');
+  });
+  const c=ACH.filter(a=>a.f()).length;
+  const el=document.getElementById('ach-count');if(el)el.textContent=c+' / '+ACH.length;
+}
+function rAchTab(){
+  const grid=document.getElementById('ach-g');if(!grid)return;
+  const c=ACH.filter(a=>a.f()).length;
+  document.getElementById('ach-count').textContent=c+' / '+ACH.length;
+  grid.innerHTML=ACH.map(a=>`<div class="bdg${a.f()?' on':''}" id="ab-${a.id}"><span class="bdg-ico">${a.i}</span><span class="bdg-cn">${a.cn}</span><span class="bdg-en">${a.en}</span><span class="bdg-cond">${a.cond}</span></div>`).join('');
+}
+function showAP(a){
+  if(!a)return;
+  document.getElementById('ap-ico').textContent=a.i;
+  document.getElementById('ap-name').textContent=a.cn+' · '+a.en;
+  const p=document.getElementById('ach-popup');p.classList.add('show');spawnCf();
+  setTimeout(()=>p.classList.remove('show'),3500);
+}
+function spawnCf(){
+  const w=document.getElementById('cfw');
+  const cols=['#c8b8ff','#e8d87a','#ff9ed2','#7adfa0','#7dd3fc','#f97316'];
+  for(let i=0;i<55;i++){const c=document.createElement('div');c.className='cf';c.style.cssText=`left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};width:${4+Math.random()*7}px;height:${4+Math.random()*7}px;animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.5}s;border-radius:${Math.random()>.5?'50%':'2px'}`;w.appendChild(c);setTimeout(()=>c.remove(),3500);}
+}
+
+/* ══ ANNIVERSARY with dropdown selectors ══ */
+const KEY_DATES=[
+  {ico:'💍',cn:'求婚日',en:'Proposal Day',key:'proposeDate',def:'2024-02-14',isBday:false},
+  {ico:'💒',cn:'婚礼日',en:'Wedding Day',key:'weddingDate',def:'2026-05-24',isBday:false},
+  {ico:'🎂',cn:'老公生日',en:'His Birthday',key:'husbandBday',def:'1995-08-12',isBday:true},
+  {ico:'🌸',cn:'老婆生日',en:'Her Birthday',key:'wifeBday',def:'1996-03-20',isBday:true},
+  {ico:'🌹',cn:'上次约会',en:'Last Date',key:'lastDate',def:'2026-04-16',isBday:false},
+];
+// togetherDate is handled separately in top card
+const MONTHS=['1月 Jan','2月 Feb','3月 Mar','4月 Apr','5月 May','6月 Jun','7月 Jul','8月 Aug','9月 Sep','10月 Oct','11月 Nov','12月 Dec'];
+
+function getDiff(ds){const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds);d.setHours(0,0,0,0);return Math.round((d-t)/864e5);}
+
+// For birthdays: get days until NEXT occurrence
+function getDaysUntilNextBirthday(ds){
+  const today=new Date();today.setHours(0,0,0,0);
+  const bday=new Date(ds);
+  const thisYear=new Date(today.getFullYear(),bday.getMonth(),bday.getDate());
+  thisYear.setHours(0,0,0,0);
+  const diff=Math.round((thisYear-today)/864e5);
+  if(diff>0)return diff;
+  if(diff===0)return 0;
+  const nextYear=new Date(today.getFullYear()+1,bday.getMonth(),bday.getDate());
+  return Math.round((nextYear-today)/864e5);
+}
+
+function initAnnSelects(){
+  // together date
+  const tdKeys=['togetherDate'];
+  const allKeys=[...KEY_DATES.map(k=>k.key),...tdKeys];
+  allKeys.forEach(key=>{
+    const yr=document.getElementById('ys-'+key);
+    const mr=document.getElementById('ms-'+key);
+    const dr=document.getElementById('ds-'+key);
+    if(!yr||yr.options.length)return;
+    const kd=KEY_DATES.find(k=>k.key===key);
+    const defDate=key==='togetherDate'?'2023-01-01':(kd?kd.def:'2020-01-01');
+    const cur=(G[key]||defDate).split('-');
+    for(let y=1990;y<=2050;y++){const o=document.createElement('option');o.value=y;o.textContent=y+'年';if(y==cur[0])o.selected=true;yr.appendChild(o);}
+    MONTHS.forEach((m,i)=>{const o=document.createElement('option');o.value=String(i+1).padStart(2,'0');o.textContent=m;if(String(i+1).padStart(2,'0')==cur[1])o.selected=true;mr.appendChild(o);});
+    for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=String(d).padStart(2,'0');o.textContent=d+'日';if(String(d).padStart(2,'0')==cur[2])o.selected=true;dr.appendChild(o);}
+  });
+  // custom form selects
+  const ay=document.getElementById('af-y'),am=document.getElementById('af-m'),ad=document.getElementById('af-d');
+  if(ay&&!ay.options.length){
+    for(let y=1990;y<=2050;y++){const o=document.createElement('option');o.value=y;o.textContent=y+'年';ay.appendChild(o);}
+    MONTHS.forEach((m,i)=>{const o=document.createElement('option');o.value=String(i+1).padStart(2,'0');o.textContent=m;am.appendChild(o);});
+    for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=String(d).padStart(2,'0');o.textContent=d+'日';ad.appendChild(o);}
+    ay.value=new Date().getFullYear();am.value='01';ad.value='01';
+  }
+}
+
+function updateKD(key){
+  const y=document.getElementById('ys-'+key).value;
+  const m=document.getElementById('ms-'+key).value;
+  const d=document.getElementById('ds-'+key).value;
+  G[key]=`${y}-${m}-${d}`;rAnn();sG();
+}
+
+function rAnn(){
+  // together days (always past → show how many days together)
+  const tDate=G.togetherDate||'2023-01-01';
+  const td=getDiff(tDate);
+  document.getElementById('ann-tog-days').textContent=Math.abs(td);
+
+  // find nearest upcoming date for second card
+  const allUpcoming=[];
+  KEY_DATES.forEach(kd=>{
+    const dv=G[kd.key]||kd.def;
+    const dff=kd.isBday?getDaysUntilNextBirthday(dv):getDiff(dv);
+    if(dff>=0)allUpcoming.push({ico:kd.ico,cn:kd.cn,days:dff,isBday:kd.isBday});
+  });
+  // also custom dates
+  if(G.customDates)G.customDates.forEach(cd=>{const dff=getDiff(cd.date);if(dff>=0)allUpcoming.push({ico:cd.ico,cn:cd.name,days:dff,isBday:false});});
+  allUpcoming.sort((a,b)=>a.days-b.days);
+  const next=allUpcoming[0];
+  if(next){
+    document.getElementById('ann-next-ico').textContent=next.ico;
+    document.getElementById('ann-next-days').textContent=next.days===0?'今天！':next.days;
+    document.getElementById('ann-next-name').textContent=next.cn+(next.isBday?' 🎂':'');
+    document.getElementById('ann-next-lbl').innerHTML='下一个重要日子 <em>· Next Event</em>';
+  }
+
+  // key dates list
+  document.getElementById('ann-list').innerHTML=KEY_DATES.map(kd=>{
+    const dv=G[kd.key]||kd.def;
+    const isBday=kd.isBday;
+    const dff=isBday?getDaysUntilNextBirthday(dv):getDiff(dv);
+    const abs=Math.abs(dff);
+    let rel,rc='';
+    if(isBday){
+      rel=dff===0?'今天生日！🎂':`距下次生日还有 ${abs} 天`;rc=dff<=30?'soon':'';}
+    else{
+      rel=dff>0?`还有 ${abs} 天`:dff===0?'今天！':`已过 ${abs} 天`;rc=dff>0&&dff<=30?'soon':dff<=0?'past':'';}
+    return`<div class="ann-item">
+      <div class="ann-item-ico">${kd.ico}</div>
+      <div class="ann-item-info">
+        <div class="ann-item-name">${kd.cn} <span style="font-size:9px;color:var(--txt3);font-style:italic">· ${kd.en}</span></div>
+        <div class="ann-date-row">
+          <select class="ann-sel" id="ys-${kd.key}" onchange="updateKD('${kd.key}')"></select>
+          <select class="ann-sel" id="ms-${kd.key}" onchange="updateKD('${kd.key}')"></select>
+          <select class="ann-sel" id="ds-${kd.key}" onchange="updateKD('${kd.key}')"></select>
+        </div>
+      </div>
+      <div class="ann-item-right"><div class="ann-item-days">${isBday?abs:abs}</div><div class="ann-item-rel ${rc}">${rel}</div></div>
+    </div>`;
+  }).join('');
+  initAnnSelects();
+  rCustomDates();
+}
+
+function toggleAnnForm(){document.getElementById('ann-form').classList.toggle('open');}
+function saveCustomDate(){
+  const ico=document.getElementById('af-ico').value||'📅';
+  const name=document.getElementById('af-name').value.trim();
+  const y=document.getElementById('af-y').value;
+  const m=document.getElementById('af-m').value;
+  const d=document.getElementById('af-d').value;
+  if(!name)return;
+  if(!G.customDates)G.customDates=[];
+  G.customDates.push({ico,name,date:`${y}-${m}-${d}`,id:Date.now()});
+  document.getElementById('af-ico').value='';document.getElementById('af-name').value='';
+  document.getElementById('ann-form').classList.remove('open');
+  rCustomDates();sG();
+}
+function delCustomDate(id){G.customDates=G.customDates.filter(d=>d.id!==id);rCustomDates();sG();}
+function rCustomDates(){
+  const el=document.getElementById('custom-dates-list');if(!el)return;
+  if(!G.customDates||!G.customDates.length){el.innerHTML='<div style="font-size:11px;color:var(--txt3);font-style:italic;padding:6px 0">暂无自定义纪念日 · No custom dates yet</div>';return;}
+  el.innerHTML=G.customDates.map(d=>{
+    const dff=getDiff(d.date);const abs=Math.abs(dff);
+    const rel=dff>0?`还有 ${abs} 天`:dff===0?'今天！':`已过 ${abs} 天`;
+    const rc=dff>0&&dff<=30?'soon':dff<=0?'past':'';
+    return`<div class="ann-custom-item"><div class="ann-custom-item-ico">${d.ico}</div><div class="ann-custom-item-info"><div class="ann-custom-item-name">${d.name}</div><div class="ann-custom-item-date">${d.date}</div></div><div class="ann-custom-item-right"><div class="ann-custom-days">${abs}</div><div class="ann-custom-rel ${rc}">${rel}</div></div><button class="ann-del" onclick="delCustomDate(${d.id})">✕</button></div>`;
+  }).join('');
+}
+
+['wn','wp'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')enterGame();}));
+</script>
+</body>
+</html>
