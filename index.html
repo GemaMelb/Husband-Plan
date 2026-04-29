@@ -117,6 +117,12 @@ body{font-family:var(--fnt);color:var(--txt)}
 .act-ico{font-size:20px;display:block;margin-bottom:3px}
 .act-cn{font-size:11px;color:var(--acc)}.act-en{font-size:9px;color:var(--txt3);font-style:italic;margin-top:1px}
 .act-fx{font-size:9px;color:var(--txt2);margin-top:2px}
+.act.penalty{border-color:#5a2a1a;background:var(--bg4)}
+.act.penalty:hover{background:#2a1210;border-color:#f87171}
+.act.penalty .act-cn{color:#f4a57a}
+.act.penalty .act-fx{color:#b06050}
+.act-warn{position:absolute;top:5px;right:5px;font-size:9px;color:#f87171;line-height:1}
+.act{position:relative}
 .sat-today{background:var(--bg3);border:.5px solid var(--bdr2);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
 .sat-today-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .sat-today-lbl{font-size:9px;letter-spacing:.16em;color:var(--txt3);text-transform:uppercase}
@@ -563,20 +569,25 @@ const LV=[
 ];
 const MAX_XP=1981;
 
-/* ══ ACTIONS (12) ══ */
+/* ══ ACTIONS (12 positive + 4 penalty) ══ */
 const ACTIONS=[
-  {ico:'💌',cn:'写情书',en:'Love Note',fx:'+浪漫感',gain:{r:7,sat:4,xp:4},cat:'r'},
-  {ico:'🌹',cn:'送小礼物',en:'Gift',fx:'+浪漫感',gain:{r:6,sat:4,xp:4},cat:'r'},
-  {ico:'🕯️',cn:'烛光约会',en:'Candle Date',fx:'+浪漫+满意',gain:{r:9,sat:6,xp:5},cat:'r'},
-  {ico:'🎵',cn:'一起听歌',en:'Music',fx:'+浪漫感',gain:{r:5,sat:3,xp:3},cat:'r'},
-  {ico:'🧹',cn:'主动打扫',en:'Clean House',fx:'+居家力',gain:{c:9,sat:5,xp:5},cat:'c'},
-  {ico:'🛒',cn:'采购日常',en:'Grocery',fx:'+居家力',gain:{c:6,sat:3,xp:4},cat:'c'},
-  {ico:'🔧',cn:'修理东西',en:'Fix It',fx:'+居家力',gain:{c:8,sat:4,xp:5},cat:'c'},
-  {ico:'🍳',cn:'下厨做饭',en:'Cook',fx:'+厨艺+满意',gain:{k:9,sat:5,xp:5},cat:'k'},
-  {ico:'☕',cn:'做早餐',en:'Breakfast',fx:'+厨艺+浪漫',gain:{k:6,r:3,xp:4},cat:'k'},
-  {ico:'💬',cn:'认真倾听',en:'Deep Listen',fx:'+沟通力',gain:{e:9,d:3,xp:5},cat:'e'},
-  {ico:'🙌',cn:'尊重决定',en:'Respect',fx:'+独立尊重',gain:{d:9,e:3,xp:5},cat:'d'},
-  {ico:'📚',cn:'一起学习',en:'Learn',fx:'+成长意愿',gain:{g:9,e:3,xp:6},cat:'g'},
+  {ico:'💌',cn:'写情书',en:'Love Note',fx:'+浪漫感',gain:{r:7,sat:4,xp:4},cat:'r',penalty:false},
+  {ico:'🌹',cn:'送小礼物',en:'Gift',fx:'+浪漫感',gain:{r:6,sat:4,xp:4},cat:'r',penalty:false},
+  {ico:'🕯️',cn:'烛光约会',en:'Candle Date',fx:'+浪漫+满意',gain:{r:9,sat:6,xp:5},cat:'r',penalty:false},
+  {ico:'🎵',cn:'一起听歌',en:'Music',fx:'+浪漫感',gain:{r:5,sat:3,xp:3},cat:'r',penalty:false},
+  {ico:'🧹',cn:'主动打扫',en:'Clean House',fx:'+居家力',gain:{c:9,sat:5,xp:5},cat:'c',penalty:false},
+  {ico:'🛒',cn:'采购日常',en:'Grocery',fx:'+居家力',gain:{c:6,sat:3,xp:4},cat:'c',penalty:false},
+  {ico:'🔧',cn:'修理东西',en:'Fix It',fx:'+居家力',gain:{c:8,sat:4,xp:5},cat:'c',penalty:false},
+  {ico:'🍳',cn:'下厨做饭',en:'Cook',fx:'+厨艺+满意',gain:{k:9,sat:5,xp:5},cat:'k',penalty:false},
+  {ico:'☕',cn:'做早餐',en:'Breakfast',fx:'+厨艺+浪漫',gain:{k:6,r:3,xp:4},cat:'k',penalty:false},
+  {ico:'💬',cn:'认真倾听',en:'Deep Listen',fx:'+沟通力',gain:{e:9,d:3,xp:5},cat:'e',penalty:false},
+  {ico:'🙌',cn:'尊重决定',en:'Respect',fx:'+独立尊重',gain:{d:9,e:3,xp:5},cat:'d',penalty:false},
+  {ico:'📚',cn:'一起学习',en:'Learn',fx:'+成长意愿',gain:{g:9,e:3,xp:6},cat:'g',penalty:false},
+  // ── 扣分行动 · Penalty Actions ──
+  {ico:'📸',cn:'偷拍丑照',en:'Ugly Candid',fx:'⚠ -浪漫感 -满意',gain:{r:-8,sat:-6,xp:1},cat:'r',penalty:true,msg:'他偷拍了一张你完全没准备的丑照，还发给朋友看了'},
+  {ico:'💬',cn:'敷衍回应',en:'Dismissive',fx:'⚠ -沟通力 -满意',gain:{e:-8,sat:-5,xp:1},cat:'e',penalty:true,msg:'你说了很重要的事，他"嗯嗯哦哦"连眼神都没给'},
+  {ico:'🗑️',cn:'忘倒垃圾',en:'Forgot Chores',fx:'⚠ -居家力 -满意',gain:{c:-8,sat:-5,xp:1},cat:'c',penalty:true,msg:'说好他负责的垃圾，又一次没有倒'},
+  {ico:'❄️',cn:'对你冷战',en:'Silent Treatment',fx:'⚠ -沟通 -尊重 -满意',gain:{e:-10,d:-6,sat:-8,xp:1},cat:'e',penalty:true,msg:'有矛盾他选择冷战，拒绝任何沟通'},
 ];
 
 /* ══ SKILL TREE — 5 cats, 10 each = 50 skills, with auto-unlock thresholds ══ */
@@ -674,8 +685,9 @@ const ACH=[
   {id:'a24',i:'💍',cn:'婚前满分',en:'Pre-Wedding',cond:'XP ≥ 400',f:()=>G.xp>=400},
 ];
 
-/* ══ EVENTS ══ */
+/* ══ EVENTS (28 total) ══ */
 const EV=[
+  // ── 原有8个 ──
   {tag:'职场平等 · Career',t:'她升职了',te:'She Got Promoted',s:'你刚拿到梦寐以求的晋升机会，薪资比他高了一大截。回到家你告诉他这个消息……',d:'"真的吗？那……那你以后比我赚得多了。" 他沉默了一会儿。',
    c:[{t:'他真诚地说"我为你骄傲"，给了你大大的拥抱',good:true,g:{r:10,sat:7,d:7,xp:10}},
       {t:'他说"那以后你请客"，若无其事轻松化解',good:true,g:{r:6,sat:4,xp:7}},
@@ -708,6 +720,87 @@ const EV=[
    c:[{t:'你冷静表达感受，没有指责，他认真道歉',good:true,g:{e:9,sat:6,xp:9}},
       {t:'你们一起订了外卖，你提议建共享日历',good:true,g:{e:7,g:7,xp:8}},
       {t:'你直接爆发，气氛僵了整个晚上',good:false,g:{e:-4,sat:-8,r:-3,xp:1}}]},
+  // ── 新增20个 ──
+  {tag:'手机边界 · Phone',t:'吃饭时的手机',te:'Phone at Dinner',s:'你们难得一起在家吃饭，他从坐下来就没放下过手机……',d:'"等一下，我就看完这条消息。" 他头都没抬。',
+   c:[{t:'你平静地说"我们约定吃饭不看手机好吗"，他立刻同意',good:true,g:{e:10,sat:7,xp:10}},
+      {t:'你拿走了他的手机放在餐桌另一端，他笑着接受了',good:true,g:{r:8,sat:6,xp:8}},
+      {t:'你什么都没说，默默吃完饭，心里很失落',good:false,g:{e:-5,sat:-7,xp:2}}]},
+  {tag:'育儿观念 · Parenting',t:'关于要不要孩子',te:'Kids Conversation',s:'亲戚又催你们要孩子了，你们回家后聊起这个话题……',d:'"其实……我觉得还不急，你觉得呢？" 他试探地问。',
+   c:[{t:'你们认真地交换了彼此真实的想法，达成了共识',good:true,g:{e:12,d:9,sat:8,xp:12}},
+      {t:'你说"这件事我们两个决定就好，不用听别人的"',good:true,g:{d:10,e:7,xp:9}},
+      {t:'他说"父母那边压力很大，我们还是配合一下吧"',good:false,g:{d:-8,e:-5,sat:-6,xp:2}}]},
+  {tag:'婆媳关系 · Family',t:'婆婆的意见',te:'In-Law Issue',s:'婆婆对你的某个生活习惯提出了意见，他在场……',d:'"妈说得也有道理……" 他含糊地说。',
+   c:[{t:'他说"妈，我们有自己的方式，谢谢你关心"，温柔但坚定',good:true,g:{d:12,sat:9,r:7,xp:12}},
+      {t:'他事后单独跟你道歉，说他应该当场站出来',good:true,g:{e:9,sat:6,xp:8}},
+      {t:'他说"你就稍微改改，让她高兴一下嘛"',good:false,g:{d:-9,sat:-8,xp:2}}]},
+  {tag:'朋友圈隐私 · Privacy',t:'他发了你的照片',te:'Posted Without Asking',s:'你发现他把一张你不喜欢的照片发到了朋友圈，没有提前问你……',d:'"就是随手发的，你的照片很好看啊。" 他不解地说。',
+   c:[{t:'他立刻删掉，并认真记下"以后发你的照片要先问"',good:true,g:{d:11,sat:8,xp:10}},
+      {t:'他有点不理解但尊重你，删了照片没有多说',good:true,g:{d:8,sat:5,xp:7}},
+      {t:'"这也要这么敏感？"他有些不耐烦地说',good:false,g:{d:-9,r:-6,sat:-8,xp:2}}]},
+  {tag:'节假日安排 · Holiday',t:'假期去哪里',te:'Holiday Plans',s:'长假快到了，他已经计划好要回老家，但你有另外的安排……',d:'"每年都要回去的，这有什么好商量的。" 他理所当然地说。',
+   c:[{t:'你们坐下来认真协商，找到了双方都接受的方案',good:true,g:{e:10,d:8,sat:7,xp:10}},
+      {t:'他意识到没有提前问你，主动道歉并重新商量',good:true,g:{e:9,sat:6,xp:8}},
+      {t:'他说"我家的规矩就是这样，你得适应"',good:false,g:{d:-10,sat:-8,xp:2}}]},
+  {tag:'消费观念 · Money',t:'他的冲动消费',te:'Impulse Purchase',s:'他没有商量就买了一件大件，花了不少钱……',d:'"便宜啊，而且我觉得我们需要这个。" 他满不在乎地说。',
+   c:[{t:'你平静地说"以后超过一定金额的消费我们要商量一下"，他认同',good:true,g:{e:10,d:8,sat:6,xp:10}},
+      {t:'你表达了不满，他道歉并同意以后大额消费一起决定',good:true,g:{e:8,sat:5,xp:8}},
+      {t:'"我赚的钱我做主，这有什么问题吗？"',good:false,g:{d:-9,e:-6,sat:-8,xp:2}}]},
+  {tag:'两地分居 · Distance',t:'他要出差一个月',te:'Long Business Trip',s:'他突然告诉你下个月要出差四周，还是去很远的地方……',d:'"公司安排的，没办法。" 他有点歉意地说。',
+   c:[{t:'你们制定了视频通话的固定时间，互相支持',good:true,g:{e:9,r:8,sat:6,xp:9}},
+      {t:'他主动提出每天固定时间陪你说话，让你安心',good:true,g:{r:10,sat:7,xp:9}},
+      {t:'他说"现代人不都这样吗，你想太多了"',good:false,g:{e:-6,r:-5,sat:-7,xp:2}}]},
+  {tag:'宠物问题 · Pets',t:'你想养一只猫',te:'Getting a Pet',s:'你一直很想养一只猫，今天认真跟他提起这件事……',d:'"猫毛很烦的，而且谁来照顾？" 他皱着眉说。',
+   c:[{t:'他说"我们一起了解一下，如果你真的很想要我支持你"',good:true,g:{d:10,r:8,sat:7,xp:10}},
+      {t:'他提议先试养几天，尊重你的感受',good:true,g:{d:8,sat:5,xp:7}},
+      {t:'"这是我的家，我不想养就不养。" 他直接拒绝',good:false,g:{d:-10,sat:-8,xp:2}}]},
+  {tag:'外貌评价 · Appearance',t:'他的一句玩笑',te:'The Offhand Comment',s:'你今天穿了一件新衣服，他看了一眼说了一句话……',d:'"这件有点显胖啊，上次那件更好看。" 他随口说道。',
+   c:[{t:'你告诉他这句话让你不舒服，他认真道歉说以后注意',good:true,g:{e:10,d:8,sat:6,xp:10}},
+      {t:'他意识到失言，立刻说"不对，你穿什么都好看，我说错了"',good:true,g:{r:9,sat:7,xp:8}},
+      {t:'"我只是说实话，你为什么这么敏感？"',good:false,g:{r:-8,d:-8,sat:-9,xp:2}}]},
+  {tag:'旅行计划 · Travel',t:'旅行风格不同',te:'Travel Styles',s:'你们在计划蜜月旅行，你想去欧洲文化游，他想去海岛躺平……',d:'"躺几天不好吗？还到处走，多累啊。" 他说。',
+   c:[{t:'你们各退一步，设计了一个结合文化和放松的行程',good:true,g:{e:9,r:8,sat:7,xp:10}},
+      {t:'他说"那这次听你的，下次我来定"，达成交换',good:true,g:{d:8,sat:6,xp:8}},
+      {t:'他说"你安排吧，反正我哪里都行"，但明显不情愿',good:false,g:{e:-4,sat:-5,xp:2}}]},
+  {tag:'朋友关系 · Friends',t:'他和前任还联系',te:'Ex Still in Contact',s:'你无意间看到他和前任还有微信往来，他说只是普通朋友……',d:'"以前的同学而已，你想多了。" 他不以为然地说。',
+   c:[{t:'你平静表达了你的感受，他认真倾听并主动说会注意边界',good:true,g:{e:11,d:9,sat:7,xp:11}},
+      {t:'他说"我理解你的感受，我会更注意沟通透明度"',good:true,g:{e:9,sat:6,xp:8}},
+      {t:'"你这是不信任我，控制欲太强了。"',good:false,g:{d:-9,e:-6,sat:-8,xp:2}}]},
+  {tag:'生活节奏 · Lifestyle',t:'他的作息很乱',te:'Different Schedules',s:'他最近经常深夜还在刷手机，严重影响了你的睡眠……',d:'"我睡不着，玩手机而已，你先睡嘛。" 他说。',
+   c:[{t:'你们商量出了一个互不干扰的作息方案',good:true,g:{e:9,d:8,sat:6,xp:9}},
+      {t:'他主动换了睡前习惯，说"你的睡眠比我刷手机重要"',good:true,g:{r:10,sat:8,xp:9}},
+      {t:'"你睡你的，管我那么多干嘛。"',good:false,g:{e:-6,sat:-7,xp:2}}]},
+  {tag:'表达爱意 · Affection',t:'你需要更多陪伴',te:'Need More Quality Time',s:'你最近感觉你们之间的陪伴质量越来越低，你想聊聊……',d:'"我不是每天都在家吗？" 他有点困惑地说。',
+   c:[{t:'你解释了"在场"和"陪伴"的区别，他认真听了并立刻行动',good:true,g:{e:11,r:9,sat:8,xp:11}},
+      {t:'他提议每周固定一个"无手机陪伴时间"',good:true,g:{r:10,sat:7,xp:9}},
+      {t:'"我已经很累了，你要求太多了。"',good:false,g:{r:-7,e:-6,sat:-8,xp:2}}]},
+  {tag:'社交媒体 · Social Media',t:'他在网上说了你',te:'Venting Online',s:'你发现他在朋友群里说了一些关于你的事，虽然是玩笑，但你很介意……',d:'"朋友之间开玩笑而已，不要这么认真嘛。" 他说。',
+   c:[{t:'他认真道歉，说"以后不会把我们的事拿出去说了"',good:true,g:{d:11,e:9,sat:7,xp:11}},
+      {t:'他虽然有点不理解，但尊重你的感受并道歉',good:true,g:{d:8,sat:5,xp:7}},
+      {t:'"你太敏感了，我只是说说，又没有恶意。"',good:false,g:{d:-9,r:-6,sat:-8,xp:2}}]},
+  {tag:'健康习惯 · Health',t:'他不爱运动',te:'Healthy Lifestyle',s:'你提议一起养成运动的习惯，对身体和感情都好……',d:'"我上班已经很累了，下班还要运动？" 他叹气说。',
+   c:[{t:'他说"好，我们从散步开始，不用太激烈"',good:true,g:{g:10,r:8,sat:6,xp:9}},
+      {t:'你们商量出一个轻松可坚持的共同运动计划',good:true,g:{g:9,e:7,xp:8}},
+      {t:'"你自己去吧，别拉着我。"',good:false,g:{g:-5,sat:-5,xp:2}}]},
+  {tag:'重要决定 · Decisions',t:'他自己做了决定',te:'Unilateral Decision',s:'他在没有告诉你的情况下，答应了一件会影响你们共同生活的事……',d:'"我以为这种事不用商量……" 他有些不好意思地说。',
+   c:[{t:'你平静地说"以后影响我们两个的事，希望一起决定"，他认同',good:true,g:{d:11,e:9,sat:7,xp:11}},
+      {t:'他主动道歉说"我没考虑到你，下次一定提前说"',good:true,g:{e:10,sat:6,xp:9}},
+      {t:'"这种小事也要汇报？你管太多了。"',good:false,g:{d:-10,sat:-8,xp:2}}]},
+  {tag:'语言关怀 · Words',t:'你需要一句鼓励',te:'Words of Affirmation',s:'你今天遭受了挫折，内心很脆弱，需要他说一句温柔的话……',d:'"都是小事，明天就好了，别想太多。"',
+   c:[{t:'你告诉他你现在需要的不是建议，而是拥抱和支持，他立刻给了你',good:true,g:{r:11,e:9,sat:9,xp:11}},
+      {t:'他意识到自己说错了，重新拥抱你说"你已经很棒了"',good:true,g:{r:10,sat:8,xp:9}},
+      {t:'"你就是想太多，我说的是实话。"',good:false,g:{r:-7,e:-6,sat:-9,xp:2}}]},
+  {tag:'成长进步 · Growth',t:'他嘲笑你的爱好',te:'Mocking Your Hobby',s:'你最近迷上了一个新爱好，他看到后笑了……',d:'"这玩意儿有什么用啊，浪费时间。" 他摇着头说。',
+   c:[{t:'你认真地说"我的爱好不需要有用，我喜欢就够了"，他反思了',good:true,g:{d:11,g:9,sat:7,xp:10}},
+      {t:'他意识到自己说错了，表示愿意了解你喜欢的东西',good:true,g:{e:9,g:8,xp:9}},
+      {t:'"我只是说实话，你干嘛这么激动。"',good:false,g:{d:-8,g:-5,sat:-7,xp:2}}]},
+  {tag:'边界设定 · Boundaries',t:'他翻看了你的手机',te:'Privacy Boundary',s:'你发现他在你不知情的情况下翻看了你的手机……',d:'"就随便看看，你有什么好藏的？" 他理直气壮地说。',
+   c:[{t:'你严肃地说"隐私是相互尊重的基础"，他认错并承诺不再这样',good:true,g:{d:12,e:9,sat:7,xp:12}},
+      {t:'他虽然不完全理解，但认为尊重你比坚持己见更重要',good:true,g:{d:9,sat:5,xp:8}},
+      {t:'"夫妻之间还要隐私？你是不是有什么秘密。"',good:false,g:{d:-11,r:-7,sat:-9,xp:2}}]},
+  {tag:'感谢表达 · Gratitude',t:'他从不说谢谢',te:'Taking You for Granted',s:'你为他做了很多事，但他从来不说谢谢，好像都是理所当然……',d:'"家里的事不就是这样吗，说什么谢谢。" 他困惑地说。',
+   c:[{t:'你告诉他被认可对你很重要，他当即说了一句真诚的谢谢',good:true,g:{r:10,e:9,sat:9,xp:11}},
+      {t:'他开始主动说谢谢，虽然一开始有点奇怪，但他在努力',good:true,g:{r:8,e:7,sat:6,xp:8}},
+      {t:'"你做这些不是应该的吗，还要我说谢谢？"',good:false,g:{r:-8,d:-8,sat:-9,xp:2}}]},
 ];
 
 const TT={r:['他今天主动说了"辛苦了"','他关掉游戏问你今天怎么样','他记得你最喜欢的口味了'],c:['他主动拿起了拖把！进步','碗比昨天洗得干净','他把袜子放洗衣机了'],k:['荷包蛋没糊，很有进步','厨房没有起火，成功','面条居然熟了，奇迹'],e:['他今天认真听你说完了','他没有急着给建议，只是听','他主动道歉了，进步很大'],d:['他问了你对这件事的看法','他支持你的决定，没有多问','他记得今天是你的重要日子'],g:['他今天分享了一本好书','他说想学一门新技能','他主动讨论了你们未来规划']};
@@ -727,6 +820,10 @@ function enterGame(){
   CU={name,key};lG(key);
   if(!G.customDates)G.customDates=[];
   if(!G.actionCounts)G.actionCounts={r:0,c:0,k:0,e:0,d:0,g:0};
+  // daily reset: clear satToday if last play was a different calendar day
+  const todayStr=new Date().toISOString().slice(0,10);
+  if(G.lastPlayDate&&G.lastPlayDate!==todayStr){G.satToday=0;}
+  G.lastPlayDate=todayStr;
   document.getElementById('nav-nm').textContent=name;
   document.getElementById('nav-av').textContent=name[0].toUpperCase();
   document.getElementById('welcome').classList.add('out');
@@ -754,12 +851,22 @@ function go(id){
 /* ══ ACTIONS RENDER ══ */
 function renderActions(){
   document.getElementById('act-g').innerHTML=ACTIONS.map((a,i)=>
-    `<div class="act" onclick="act(${i})"><span class="act-ico">${a.ico}</span><div class="act-cn">${a.cn}</div><div class="act-en">${a.en}</div><div class="act-fx">${a.fx}</div></div>`
+    `<div class="act${a.penalty?' penalty':''}" onclick="act(${i})">
+      ${a.penalty?'<span class="act-warn">⚠</span>':''}
+      <span class="act-ico">${a.ico}</span>
+      <div class="act-cn">${a.cn}</div>
+      <div class="act-en">${a.en}</div>
+      <div class="act-fx">${a.fx}</div>
+    </div>`
   ).join('');
 }
 
 /* ══ REFRESH ══ */
 function rf(){
+  // midnight reset check
+  const todayStr=new Date().toISOString().slice(0,10);
+  if(G.lastPlayDate&&G.lastPlayDate!==todayStr){G.satToday=0;G.lastPlayDate=todayStr;}
+  else if(!G.lastPlayDate){G.lastPlayDate=todayStr;}
   const lv=LV.filter(l=>G.xp>=l.at).pop();
   const nlv=LV.find(l=>l.at>G.xp);
   document.getElementById('ltag').innerHTML=lv.tag+' <em>· '+lv.te+'</em>';
@@ -793,16 +900,22 @@ function act(i){
   const a=ACTIONS[i];
   let satDelta=0;
   Object.entries(a.gain).forEach(([k,v])=>{
-    if(k==='xp')G.xp=Math.min(MAX_XP,G.xp+v);
+    if(k==='xp')G.xp=Math.max(0,Math.min(MAX_XP,G.xp+v));
     else if(k==='sat'){const nv=Math.max(0,Math.min(100,G.sat+v));satDelta+=nv-G.sat;G.sat=nv;}
-    else G[k]=Math.min(100,G[k]+v);
+    else G[k]=Math.max(0,Math.min(100,G[k]+v));
   });
   G.satToday=(G.satToday||0)+satDelta;
-  // track action counts for auto-unlock
   if(!G.actionCounts)G.actionCounts={r:0,c:0,k:0,e:0,d:0,g:0};
-  G.actionCounts[a.cat]=(G.actionCounts[a.cat]||0)+1;
-  const pool=TT[a.cat]||TT.r;
-  document.getElementById('tst').textContent=pool[Math.floor(Math.random()*pool.length)];
+  if(!a.penalty) G.actionCounts[a.cat]=(G.actionCounts[a.cat]||0)+1;
+  if(a.penalty){
+    // show penalty popup
+    const details=Object.entries(a.gain).filter(([k,v])=>k!=='xp'&&k!=='sat'&&v!==0).map(([k,v])=>(v>0?'+':'')+v+' '+k).join(' · ');
+    showScorePopup(Math.abs(satDelta)||Math.abs(Object.values(a.gain).filter(v=>v<0).reduce((s,v)=>s+v,0)),false,a.msg||details);
+    document.getElementById('tst').textContent=a.msg||'记录了今天的失望时刻';
+  } else {
+    const pool=TT[a.cat]||TT.r;
+    document.getElementById('tst').textContent=pool[Math.floor(Math.random()*pool.length)];
+  }
   rf();
 }
 
